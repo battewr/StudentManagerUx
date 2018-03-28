@@ -1,0 +1,1 @@
+webpack --progress --colors --display-error-details --display-reasons
