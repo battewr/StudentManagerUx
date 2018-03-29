@@ -6,6 +6,10 @@ echo ----------
 call node_modules/.bin/tslint --project tsconfig.json
 if errorlevel 1 goto FAIL
 
+echo --
+echo ts-lint completed successfully
+echo --
+
 echo ----------
 echo Running webpack task....
 echo ----------
