@@ -2,6 +2,8 @@ import * as React from "React";
 import * as uuid from "uuid";
 import { Constants } from "./shared/Constants";
 
+import "../styles/Body.less";
+
 interface GradeSelectionWrapper {
     value: string;
     displayString: string;
@@ -57,6 +59,7 @@ export class Body extends React.Component<BodyProperties, BodyState> {
      */
     public render(): JSX.Element {
         return <div className="body-container">
+            <h2> Create a new Student! </h2>
             <div className="student-name-input">
                 <span className="student-name-input-title">Student Name: </span>
                 <span className="student-name-input-text"><input type="text" placeholder="New Student Name" value={this.state.studentName}
@@ -126,9 +129,9 @@ export class Body extends React.Component<BodyProperties, BodyState> {
                 },
                 method: "POST",
             }).then((response) => {
-                this.setState({postResult: `Finished: ${response.status.toString()} : ${response.statusText} : ${newStudentId}`});
+                this.setState({ postResult: `Finished: ${response.status.toString()} : ${response.statusText} : ${newStudentId}` });
             }).catch((err) => {
-                this.setState({postResult: `Post Error: ${err}`});
+                this.setState({ postResult: `Post Error: ${err}` });
             });
         });
     }

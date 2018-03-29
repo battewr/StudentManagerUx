@@ -19,7 +19,9 @@ export class Layout extends React.Component<LayoutProperties> {
      */
     public render(): JSX.Element {
         return <div className="main-app-root">
-            <div className="title-section">Header</div>
+            <div className="title-section">
+                <h1>Student Management Application</h1>
+            </div>
             <div className="main-body-section">
                 <Body />
             </div>
