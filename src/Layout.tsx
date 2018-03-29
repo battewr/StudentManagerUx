@@ -1,5 +1,7 @@
 import * as React from "React";
 
+import { Body } from "./Body";
+
 import "../styles/Layout.less";
 
 export interface LayoutProperties {
@@ -7,16 +9,21 @@ export interface LayoutProperties {
 }
 
 export class Layout extends React.Component<LayoutProperties> {
-    // private _break: string = 'hello';
     constructor(props: any) {
         super(props);
     }
 
-    public render() {
-        return <div className="mainAppRoot">
-            <div className="titleSection">Header</div>
-            <div className="mainBodySection">Body</div>
-            <div className="footerSection">Footer</div>
+    /**
+     *
+     * @returns {JSX.Element}
+     */
+    public render(): JSX.Element {
+        return <div className="main-app-root">
+            <div className="title-section">Header</div>
+            <div className="main-body-section">
+                <Body />
+            </div>
+            <div className="footer-section">Footer</div>
         </div>;
     }
 };
