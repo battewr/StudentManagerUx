@@ -3,17 +3,18 @@ import * as React from "React";
 import { Title } from "./Title";
 import { Body } from "./Body";
 import { RightMenuPanel } from "./RightMenuPanel";
+import { SelectedPanel } from "./shared/Enums";
 
 import "../styles/Layout.less";
-import { isPrimitive } from "util";
 
 export interface LayoutProperties {
 
-}
+};
 
 export interface LayoutState {
     mainMenuVisible: boolean;
-}
+    selectedPanel: SelectedPanel;
+};
 
 export class Layout extends React.Component<LayoutProperties, LayoutState> {
     /**
@@ -24,10 +25,12 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
         super(props);
 
         this.state = {
-            mainMenuVisible: false
+            mainMenuVisible: false,
+            selectedPanel: SelectedPanel.ListStudents,
         };
 
         this.onToggleMainMenu = this.onToggleMainMenu.bind(this);
+        this.onPanelChanged = this.onPanelChanged.bind(this);
     }
 
     /**
@@ -40,8 +43,14 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
                 <Title onToggleMenu={this.onToggleMainMenu} />
             </div>
             <div className="main-body-section">
-                <RightMenuPanel isPanelVisible={this.state.mainMenuVisible} />
-                <Body />
+                <RightMenuPanel
+                    selectedMenuItem={this.state.selectedPanel}
+                    isPanelVisible={this.state.mainMenuVisible}
+                    onPanelSelectChanged={this.onPanelChanged} />
+
+                <Body
+                    selectedPanel={this.state.selectedPanel}
+                    onPanelChange={this.onPanelChanged} />
             </div>
             <div className="footer-section">
                 {/* TODO */}
@@ -50,10 +59,14 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
         </div>;
     }
 
+    private onPanelChanged(selectedPanel: SelectedPanel): void {
+        this.setState({ selectedPanel });
+    }
+
     /**
      *
      */
     private onToggleMainMenu() {
-        this.setState({mainMenuVisible: !this.state.mainMenuVisible});
+        this.setState({ mainMenuVisible: !this.state.mainMenuVisible });
     }
 };

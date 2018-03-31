@@ -4,6 +4,7 @@
   "description": "StudentManager Primary Website",
   "main": "webpack.config.js",
   "dependencies": {
+    "@types/es6-shim": "^0.31.36",
     "@types/react": "^16.1.0",
     "@types/react-dom": "^16.0.4",
     "@types/uuid": "^3.4.3",
@@ -13,6 +14,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.11",
+    "es6-shim": "^0.35.3",
     "less": "^3.0.1",
     "less-loader": "^4.1.0",
     "react": "^16.2.0",

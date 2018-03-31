@@ -3,27 +3,8 @@ import * as uuid from "uuid";
 import { Constants } from "./shared/Constants";
 
 import "../styles/Shared.less";
+import { GradeSelector } from "./shared/GradeSelector";
 
-interface GradeSelectionWrapper {
-    value: string;
-    displayString: string;
-}
-
-const availableGrades: GradeSelectionWrapper[] = [
-    { value: "K", displayString: "Kindergarden" },
-    { value: "1", displayString: "Grade 1" },
-    { value: "2", displayString: "Grade 2" },
-    { value: "3", displayString: "Grade 3" },
-    { value: "4", displayString: "Grade 4" },
-    { value: "5", displayString: "Grade 5" },
-    { value: "6", displayString: "Grade 6" },
-    { value: "7", displayString: "Grade 7" },
-    { value: "8", displayString: "Grade 8" },
-    { value: "9", displayString: "Grade 9" },
-    { value: "10", displayString: "Grade 10" },
-    { value: "11", displayString: "Grade 11" },
-    { value: "12", displayString: "Grade 12" }
-];
 
 export interface CreateStudentProperties {
 
@@ -44,6 +25,8 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
             studentGrade: "K",
             postResult: null,
         };
+
+        this.onGradeChanged = this.onGradeChanged.bind(this);
     }
 
     /**
@@ -51,8 +34,8 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
      * @returns {JSX.Element}
      */
     public render(): JSX.Element {
-        const menuItemClass = "right-menu-panel-menu-option unselectable";
-        return <div><h2 className="unselectable"> Create a new Student! </h2>
+        return <div className="create-student-container">
+            <h2 className="unselectable"> Create a new Student! </h2>
             <div className="student-name-input">
                 <span className="student-name-input-title">Student Name: </span>
                 <span className="student-name-input-text"><input type="text" placeholder="New Student Name" value={this.state.studentName}
@@ -61,10 +44,7 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
             <div className="student-grade-input">
                 <span className="student-grade-input-title">Student Grade: </span>
                 <span className="student-grade-input-text">
-                    {/** TODO: make the backend given us information regarding which grades are possible */}
-                    <select value={this.state.studentGrade} onChange={this.onStudentGradeInputChanged.bind(this)}>
-                        {this.getOptionList()}
-                    </select>
+                    <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.studentGrade} />
                 </span>
             </div>
             <button onClick={this.onSubmitNewStudent.bind(this)}>Submit</button>
@@ -84,21 +64,8 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
         </div>;
     }
 
-    /**
-     *
-     * @returns {JSX.Element[]}
-     */
-    private getOptionList(): JSX.Element[] {
-        const returnList: JSX.Element[] = [];
-
-        availableGrades.forEach((grade) => {
-            returnList.push(
-                <option selected={this.state.studentGrade === grade.value} value={grade.value}>
-                    {grade.displayString}
-                </option>);
-        });
-
-        return returnList;
+    private onGradeChanged(studentGrade: string): void {
+        this.setState({studentGrade});
     }
 
     /**
@@ -127,19 +94,6 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
                 this.setState({ postResult: `Post Error: ${err}` });
             });
         });
-    }
-
-    /**
-     *
-     * @param event
-     * @returns {void}
-     */
-    private onStudentGradeInputChanged(event: any): void {
-        if (!event || !event.target || !event.target.value ||
-            typeof event.target.value !== "string") {
-            throw "Input type unexpected!";
-        }
-        this.setState({ studentGrade: event.target.value });
     }
 
     /**

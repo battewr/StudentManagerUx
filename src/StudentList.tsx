@@ -1,10 +1,16 @@
 import * as React from "React";
 import { Constants } from "./shared/Constants";
 import Student from "./Student";
+import { IStudent } from "./shared/IStudent";
 
 import "../styles/Shared.less";
 
-interface IStudent {
+/**
+ * This is the data as seen from the backend rest request before mapping the response into
+ * the application types...
+ * TODO: Gateway/Response Interpretor pattern...
+ */
+interface IRawStudent {
     _name: string;
     _id: string;
     _grade: string;
@@ -12,13 +18,13 @@ interface IStudent {
 }
 
 export interface StudentListProperties {
-
+    onEditStudent(studentId: IStudent): void;
 }
 
 export interface StudentListState {
     isLoading: boolean;
     error: string;
-    studentList: IStudent[];
+    studentList: IRawStudent[];
 }
 
 /**
@@ -48,13 +54,13 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             method: "GET",
         }).then((response) => {
             console.log(response);
-            response.json().then((studentList: IStudent[]) => {
-                this.setState({isLoading: false, error: null, studentList});
+            response.json().then((studentList: IRawStudent[]) => {
+                this.setState({ isLoading: false, error: null, studentList });
             }).catch((err) => {
-                this.setState({isLoading: false, error: err, studentList: null});
+                this.setState({ isLoading: false, error: err, studentList: null });
             });
         }).catch((err) => {
-            this.setState({isLoading: false, error: err, studentList: null});
+            this.setState({ isLoading: false, error: err, studentList: null });
         });
     }
 
@@ -75,15 +81,26 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             return [<div className="student-list-content-load-failed">Error: {this.state.error}</div>];
         } else {
             if (!this.state.studentList) {
-            return [<div className="unknown-error">Unknown Exception</div>];
+                return [<div className="unknown-error">Unknown Exception</div>];
             }
             const studentListContent: JSX.Element[] = [];
-            this.state.studentList.forEach((student) => {
-                const studentDomEntry: JSX.Element = <div><Student name={student._name} id={student._id} grade={student._grade} /></div>;
+            this.state.studentList.forEach((student: IRawStudent) => {
+                const mappedStudent = this.convertRawStudentToInternalStudent(student);
+                const studentDomEntry: JSX.Element = <div className="student-section">
+                    <Student student={mappedStudent} onEditStudent={this.props.onEditStudent} />
+                </div>;
                 studentListContent.push(studentDomEntry);
             });
 
             return studentListContent;
         }
+    }
+
+    private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {
+        return {
+            id: rawStudent._id,
+            name: rawStudent._name,
+            grade: rawStudent._grade
+        };
     }
 };
