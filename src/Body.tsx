@@ -12,6 +12,7 @@ import { ClassRegister } from "./BodyPanels/ClassRegister";
 
 import "../styles/Body.less";
 import "../styles/Shared.less";
+import { AttendenceModification } from "./BodyPanels/AttendenceModification";
 
 export interface BodyProperties {
     selectedPanel: SelectedPanel;
@@ -41,6 +42,7 @@ export class Body extends React.Component<BodyProperties, BodyState> {
 
         this.onEditStudent = this.onEditStudent.bind(this);
         this.onEditClass = this.onEditClass.bind(this);
+        this.onEditClassList = this.onEditClassList.bind(this);
     }
 
     /**
@@ -67,9 +69,11 @@ export class Body extends React.Component<BodyProperties, BodyState> {
             case SelectedPanel.ClassRegistration:
                 return <ClassRegister />;
             case SelectedPanel.ClassList:
-                return <ClassList onEditClass={this.onEditClass} />;
+                return <ClassList onEditClass={this.onEditClass} onEditClassList={this.onEditClassList} />;
             case SelectedPanel.ClassModification:
                 return <ClassModify classToEdit={this.state.classToEdit} />;
+            case SelectedPanel.AttendenceModification:
+                return <AttendenceModification classToEdit={this.state.classToEdit} />;
             default:
                 throw "Unsupported Menu Option!!";
 
@@ -85,6 +89,12 @@ export class Body extends React.Component<BodyProperties, BodyState> {
     private onEditClass(classToEdit: IClass) {
         this.setState({ classToEdit }, () => {
             this.props.onPanelChange(SelectedPanel.ClassModification);
+        });
+    }
+
+    private onEditClassList(classToEdit: IClass) {
+        this.setState({ classToEdit }, () => {
+            this.props.onPanelChange(SelectedPanel.AttendenceModification);
         });
     }
 };

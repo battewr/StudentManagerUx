@@ -6,6 +6,7 @@ import "../../styles/Class.less";
 export interface ClassProperties {
     class: IClass;
     onEditClass(classToEdit: IClass): void;
+    onEditClassList(classToEdit: IClass): void;
 }
 
 const Class: React.StatelessComponent<ClassProperties> = (value: ClassProperties) => {
@@ -16,6 +17,9 @@ const Class: React.StatelessComponent<ClassProperties> = (value: ClassProperties
             <a href="#" onClick={() => {
                 value.onEditClass(value.class);
             }}>Edit</a>
+            <a href="#" onClick={() => {
+                value.onEditClassList(value.class);
+            }}>Student List</a>
         </div>
         <div className="class-name-container">
             <span className="class-name-label">Class Name:</span>

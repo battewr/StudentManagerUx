@@ -2,23 +2,15 @@ import * as React from "React";
 import { Constants } from "../shared/Constants";
 import { IClass } from "../shared/IClass";
 import Class from "./Class";
+import { IRawClass, IRawStudent } from "../shared/RawRestInterfaces";
 
 import "../../styles/Shared.less";
-
-/**
- * This is the data as seen from the backend rest request before mapping the response into
- * the application types...
- * TODO: Gateway/Response Interpretor pattern...
- */
-interface IRawClass {
-    _name: string;
-    _id: string;
-    _semester: string;
-    _year: string;
-}
+import { IStudent } from "../shared/IStudent";
+import { randomBytes } from "crypto";
 
 export interface ClassListProperties {
     onEditClass(classToEdit: IClass): void;
+    onEditClassList(classToEdit: IClass): void;
 }
 
 export interface ClassListState {
@@ -84,9 +76,9 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             }
             const studentListContent: JSX.Element[] = [];
             this.state.classList.forEach((student: IRawClass) => {
-                const mappedStudent = this.convertRawStudentToInternalStudent(student);
+                const mappedStudent = this.convertRawClassToInternalClass(student);
                 const studentDomEntry: JSX.Element = <div className="class-section">
-                    <Class class={mappedStudent} onEditClass={this.props.onEditClass} />
+                    <Class class={mappedStudent} onEditClass={this.props.onEditClass} onEditClassList={this.props.onEditClassList} />
                 </div>;
                 studentListContent.push(studentDomEntry);
             });
@@ -95,12 +87,27 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
         }
     }
 
-    private convertRawStudentToInternalStudent(rawStudent: IRawClass): IClass {
+    private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {
+        return {
+            id: rawStudent._id,
+            name: rawStudent._name,
+            grade: rawStudent._grade
+        };
+    }
+
+    private convertRawClassToInternalClass(rawStudent: IRawClass): IClass {
+
+        const studentList: IStudent[] = [];
+        rawStudent._studentList.forEach((rawStudent) => {
+            studentList.push(this.convertRawStudentToInternalStudent(rawStudent));
+        });
+
         return {
             id: rawStudent._id,
             name: rawStudent._name,
             year: rawStudent._year,
             semester: rawStudent._semester,
+            studentList
         };
     }
 };
