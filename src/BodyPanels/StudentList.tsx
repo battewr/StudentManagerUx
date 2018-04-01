@@ -2,20 +2,9 @@ import * as React from "React";
 import { Constants } from "../shared/Constants";
 import Student from "./Student";
 import { IStudent } from "../shared/IStudent";
+import { IRawStudent } from "../shared/RawRestInterfaces";
 
 import "../../styles/Shared.less";
-
-/**
- * This is the data as seen from the backend rest request before mapping the response into
- * the application types...
- * TODO: Gateway/Response Interpretor pattern...
- */
-interface IRawStudent {
-    _name: string;
-    _id: string;
-    _grade: string;
-    _profilePictureLink: string;
-}
 
 export interface StudentListProperties {
     onEditStudent(studentId: IStudent): void;

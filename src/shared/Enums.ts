@@ -5,4 +5,5 @@ export enum SelectedPanel {
     ClassRegistration,
     ClassList,
     ClassModification,
+    AttendenceModification,
 };
