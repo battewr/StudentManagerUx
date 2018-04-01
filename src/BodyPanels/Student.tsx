@@ -1,7 +1,7 @@
 import * as React from "react";
-import { IStudent } from "./shared/IStudent";
+import { IStudent } from "../shared/IStudent";
 
-import "../styles/Student.less";
+import "../../styles/Student.less";
 
 export interface StudentProperties {
     student: IStudent;
@@ -12,9 +12,10 @@ const Student: React.StatelessComponent<StudentProperties> = (value: StudentProp
     return <div className="student-container">
         <div className="student-id-container">
             <span className="student-id-label">Id: </span>
-            <span className="student-id-value" onClick={() => {
+            <span className="student-id-value">{value.student.id}</span>
+            <a href="#" onClick={() => {
                 value.onEditStudent(value.student);
-            }}>{value.student.id}</span>
+            }}>Edit</a>
         </div>
         <div className="student-name-container">
             <span className="student-name-label">Student Name:</span>

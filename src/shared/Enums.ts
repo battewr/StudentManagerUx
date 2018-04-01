@@ -1,5 +1,8 @@
 export enum SelectedPanel {
-    CreateStudent,
-    ListStudents,
-    EditStudent,
+    StudentRegistration,
+    StudentList,
+    StudentModification,
+    ClassRegistration,
+    ClassList,
+    ClassModification,
 };

@@ -26,7 +26,7 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
 
         this.state = {
             mainMenuVisible: false,
-            selectedPanel: SelectedPanel.ListStudents,
+            selectedPanel: SelectedPanel.StudentList,
         };
 
         this.onToggleMainMenu = this.onToggleMainMenu.bind(this);

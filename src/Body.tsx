@@ -1,10 +1,14 @@
 import * as React from "React";
 import { Constants } from "./shared/Constants";
-import { CreateStudent } from "./CreateStudent";
-import { StudentList } from "./StudentList";
+import { StudentRegister } from "./BodyPanels/StudentRegister";
+import { StudentList } from "./BodyPanels/StudentList";
 import { SelectedPanel } from "./shared/Enums";
-import { EditStudent } from "./EditStudent";
+import { StudentModify } from "./BodyPanels/StudentModify";
 import { IStudent } from "./shared/IStudent";
+import { ClassList } from "./BodyPanels/ClassList";
+import { IClass } from "./shared/IClass";
+import { ClassModify } from "./BodyPanels/ClassModify";
+import { ClassRegister } from "./BodyPanels/ClassRegister";
 
 import "../styles/Body.less";
 import "../styles/Shared.less";
@@ -16,6 +20,7 @@ export interface BodyProperties {
 
 export interface BodyState {
     studentToEdit: IStudent;
+    classToEdit: IClass;
 }
 
 /**
@@ -30,10 +35,12 @@ export class Body extends React.Component<BodyProperties, BodyState> {
         super(props);
 
         this.state = {
-            studentToEdit: null
+            studentToEdit: null,
+            classToEdit: null
         };
 
         this.onEditStudent = this.onEditStudent.bind(this);
+        this.onEditClass = this.onEditClass.bind(this);
     }
 
     /**
@@ -51,12 +58,18 @@ export class Body extends React.Component<BodyProperties, BodyState> {
      */
     private renderSelectedMenuOption(): JSX.Element {
         switch (this.props.selectedPanel) {
-            case SelectedPanel.CreateStudent:
-                return <CreateStudent />;
-            case SelectedPanel.ListStudents:
+            case SelectedPanel.StudentRegistration:
+                return <StudentRegister />;
+            case SelectedPanel.StudentList:
                 return <StudentList onEditStudent={this.onEditStudent} />;
-            case SelectedPanel.EditStudent:
-                return <EditStudent studentToEdit={this.state.studentToEdit} />;
+            case SelectedPanel.StudentModification:
+                return <StudentModify studentToEdit={this.state.studentToEdit} />;
+            case SelectedPanel.ClassRegistration:
+                return <ClassRegister />;
+            case SelectedPanel.ClassList:
+                return <ClassList onEditClass={this.onEditClass} />;
+            case SelectedPanel.ClassModification:
+                return <ClassModify classToEdit={this.state.classToEdit} />;
             default:
                 throw "Unsupported Menu Option!!";
 
@@ -65,7 +78,13 @@ export class Body extends React.Component<BodyProperties, BodyState> {
 
     private onEditStudent(studentId: IStudent) {
         this.setState({ studentToEdit: studentId }, () => {
-            this.props.onPanelChange(SelectedPanel.EditStudent);
+            this.props.onPanelChange(SelectedPanel.StudentModification);
+        });
+    }
+
+    private onEditClass(classToEdit: IClass) {
+        this.setState({ classToEdit }, () => {
+            this.props.onPanelChange(SelectedPanel.ClassModification);
         });
     }
 };

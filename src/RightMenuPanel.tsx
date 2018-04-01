@@ -15,11 +15,11 @@ interface RightMenuPanelOptions {
     displayValue: string;
 }
 
-const createStudent: SelectedPanel = SelectedPanel.CreateStudent;
-const listStudent: SelectedPanel = SelectedPanel.ListStudents;
 const menuOptions: RightMenuPanelOptions[] = [
-    {key: createStudent, displayValue: "New Student"},
-    {key: listStudent, displayValue: "Student List"}
+    {key: SelectedPanel.StudentRegistration, displayValue: "Register Student"},
+    {key: SelectedPanel.StudentList, displayValue: "Student List"},
+    {key: SelectedPanel.ClassRegistration, displayValue: "Register Class"},
+    {key: SelectedPanel.ClassList, displayValue: "Full Class List"},
 ];
 
 export class RightMenuPanel extends React.Component<RightMenuPanelProperties> {
