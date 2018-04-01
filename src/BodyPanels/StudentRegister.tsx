@@ -1,22 +1,22 @@
 import * as React from "React";
 import * as uuid from "uuid";
-import { Constants } from "./shared/Constants";
+import { Constants } from "../shared/Constants";
+import { GradeSelector } from "../shared/GradeSelector";
 
-import "../styles/Shared.less";
-import { GradeSelector } from "./shared/GradeSelector";
+import "../../styles/Shared.less";
 
 
-export interface CreateStudentProperties {
+export interface StudentRegisterProperties {
 
 }
 
-export interface CreateStudentState {
+export interface StudentRegisterState {
     studentName: string;
     studentGrade: string;
     postResult: string;
 }
 
-export class CreateStudent extends React.Component<CreateStudentProperties, CreateStudentState> {
+export class StudentRegister extends React.Component<StudentRegisterProperties, StudentRegisterState> {
     constructor(props: any) {
         super(props);
 
@@ -104,7 +104,7 @@ export class CreateStudent extends React.Component<CreateStudentProperties, Crea
     private onStudentNameInputChanged(event: any): void {
         if (!event || !event.target || !event.target.value ||
             typeof event.target.value !== "string") {
-            throw "Input type unexpected!";
+            this.setState({ studentName: "" });
         }
         this.setState({ studentName: event.target.value });
     }

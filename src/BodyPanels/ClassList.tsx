@@ -1,36 +1,36 @@
 import * as React from "React";
-import { Constants } from "./shared/Constants";
-import Student from "./Student";
-import { IStudent } from "./shared/IStudent";
+import { Constants } from "../shared/Constants";
+import { IClass } from "../shared/IClass";
+import Class from "./Class";
 
-import "../styles/Shared.less";
+import "../../styles/Shared.less";
 
 /**
  * This is the data as seen from the backend rest request before mapping the response into
  * the application types...
  * TODO: Gateway/Response Interpretor pattern...
  */
-interface IRawStudent {
+interface IRawClass {
     _name: string;
     _id: string;
-    _grade: string;
-    _profilePictureLink: string;
+    _semester: string;
+    _year: string;
 }
 
-export interface StudentListProperties {
-    onEditStudent(studentId: IStudent): void;
+export interface ClassListProperties {
+    onEditClass(classToEdit: IClass): void;
 }
 
-export interface StudentListState {
+export interface ClassListState {
     isLoading: boolean;
     error: string;
-    studentList: IRawStudent[];
+    classList: IRawClass[];
 }
 
 /**
  *
  */
-export class StudentList extends React.Component<StudentListProperties, StudentListState> {
+export class ClassList extends React.Component<ClassListProperties, ClassListState> {
     /**
      *
      * @param props
@@ -41,26 +41,25 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         this.state = {
             isLoading: true,
             error: null,
-            studentList: null
+            classList: null
         };
     }
 
     public componentDidMount() {
         // trigger the rest request...
-        fetch(Constants.BackendUri + "students", {
+        fetch(Constants.BackendUri + "class", {
             headers: {
                 "content-type": "application/json"
             },
             method: "GET",
         }).then((response) => {
-            console.log(response);
-            response.json().then((studentList: IRawStudent[]) => {
-                this.setState({ isLoading: false, error: null, studentList });
+            response.json().then((classList: IRawClass[]) => {
+                this.setState({ isLoading: false, error: null, classList });
             }).catch((err) => {
-                this.setState({ isLoading: false, error: err, studentList: null });
+                this.setState({ isLoading: false, error: err, classList: null });
             });
         }).catch((err) => {
-            this.setState({ isLoading: false, error: err, studentList: null });
+            this.setState({ isLoading: false, error: err, classList: null });
         });
     }
 
@@ -69,25 +68,25 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
      * @returns {JSX.Element}
      */
     public render(): JSX.Element {
-        return <div className="student-list-container">
+        return <div className="class-list-container">
             {this.renderStudentList()}
         </div>;
     }
 
     private renderStudentList(): JSX.Element[] {
         if (this.state.isLoading) {
-            return [<div className="student-list-conent-loading">Loading...</div>];
+            return [<div className="class-list-conent-loading">Loading...</div>];
         } else if (!!this.state.error) {
-            return [<div className="student-list-content-load-failed">Error: {this.state.error}</div>];
+            return [<div className="class-list-content-load-failed">Error: {this.state.error}</div>];
         } else {
-            if (!this.state.studentList) {
+            if (!this.state.classList) {
                 return [<div className="unknown-error">Unknown Exception</div>];
             }
             const studentListContent: JSX.Element[] = [];
-            this.state.studentList.forEach((student: IRawStudent) => {
+            this.state.classList.forEach((student: IRawClass) => {
                 const mappedStudent = this.convertRawStudentToInternalStudent(student);
-                const studentDomEntry: JSX.Element = <div className="student-section">
-                    <Student student={mappedStudent} onEditStudent={this.props.onEditStudent} />
+                const studentDomEntry: JSX.Element = <div className="class-section">
+                    <Class class={mappedStudent} onEditClass={this.props.onEditClass} />
                 </div>;
                 studentListContent.push(studentDomEntry);
             });
@@ -96,11 +95,12 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         }
     }
 
-    private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {
+    private convertRawStudentToInternalStudent(rawStudent: IRawClass): IClass {
         return {
             id: rawStudent._id,
             name: rawStudent._name,
-            grade: rawStudent._grade
+            year: rawStudent._year,
+            semester: rawStudent._semester,
         };
     }
 };
