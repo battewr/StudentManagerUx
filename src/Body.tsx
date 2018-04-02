@@ -12,7 +12,7 @@ import { ClassRegister } from "./BodyPanels/ClassRegister";
 
 import "../styles/Body.less";
 import "../styles/Shared.less";
-import { AttendenceModification } from "./BodyPanels/AttendenceModification";
+import { AttendeeModify } from "./BodyPanels/AttendeeModify";
 
 export interface BodyProperties {
     selectedPanel: SelectedPanel;
@@ -43,6 +43,7 @@ export class Body extends React.Component<BodyProperties, BodyState> {
         this.onEditStudent = this.onEditStudent.bind(this);
         this.onEditClass = this.onEditClass.bind(this);
         this.onEditClassList = this.onEditClassList.bind(this);
+        this.onEditTargetChanged = this.onEditTargetChanged.bind(this);
     }
 
     /**
@@ -73,11 +74,17 @@ export class Body extends React.Component<BodyProperties, BodyState> {
             case SelectedPanel.ClassModification:
                 return <ClassModify classToEdit={this.state.classToEdit} />;
             case SelectedPanel.AttendenceModification:
-                return <AttendenceModification classToEdit={this.state.classToEdit} />;
+                return <AttendeeModify
+                classToEdit={this.state.classToEdit}
+                onEditTargetChanged={this.onEditTargetChanged} />;
             default:
                 throw "Unsupported Menu Option!!";
 
         }
+    }
+
+    private onEditTargetChanged(newClass: IClass): void {
+        this.setState({classToEdit: newClass});
     }
 
     private onEditStudent(studentId: IStudent) {

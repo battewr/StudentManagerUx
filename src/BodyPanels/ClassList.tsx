@@ -48,7 +48,7 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             response.json().then((classList: IRawClass[]) => {
                 this.setState({ isLoading: false, error: null, classList });
             }).catch((err) => {
-                this.setState({ isLoading: false, error: err, classList: null });
+                this.setState({ isLoading: false, error: err.message, classList: null });
             });
         }).catch((err) => {
             this.setState({ isLoading: false, error: err, classList: null });
@@ -107,6 +107,7 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             name: rawStudent._name,
             year: rawStudent._year,
             semester: rawStudent._semester,
+            eligibleToGrade: rawStudent._eligibleToGrade,
             studentList
         };
     }

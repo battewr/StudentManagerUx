@@ -45,7 +45,7 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             response.json().then((studentList: IRawStudent[]) => {
                 this.setState({ isLoading: false, error: null, studentList });
             }).catch((err) => {
-                this.setState({ isLoading: false, error: err, studentList: null });
+                this.setState({ isLoading: false, error: err.message, studentList: null });
             });
         }).catch((err) => {
             this.setState({ isLoading: false, error: err, studentList: null });

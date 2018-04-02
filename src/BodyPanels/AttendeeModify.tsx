@@ -1,38 +1,59 @@
 import * as React from "react";
 import { IClass } from "../shared/IClass";
 import { IStudent } from "../shared/IStudent";
+import { Constants } from "../shared/Constants";
+import { RegisterStudent } from "./RegisterStudent";
 
 import "../../styles/AttendenceModifications.less";
-import { Constants } from "../shared/Constants";
 
-export interface AttendenceModificationProperties {
+export interface AttendeeModifyProperties {
     classToEdit: IClass;
+    onEditTargetChanged(alteredClass: IClass): void;
 }
 
-export interface AttendenceModificationState {
+export interface AttendeeModifyState {
     restEngineResult: string;
+    showAddStudentUserInterface: boolean;
 }
 
-export class AttendenceModification extends React.Component<AttendenceModificationProperties, AttendenceModificationState> {
-    constructor(props: AttendenceModificationProperties) {
+export class AttendeeModify extends React.Component<AttendeeModifyProperties, AttendeeModifyState> {
+    constructor(props: AttendeeModifyProperties) {
         super(props);
 
         this.state = {
-            restEngineResult: null
+            restEngineResult: null,
+            showAddStudentUserInterface: false,
         };
     }
 
     public render(): JSX.Element {
         return <div className="attendence-modification-container">
             <h2>Modify Class Registrations</h2>
-            <div><button>Add Student</button></div>
+
+            {this.renderAvailableStudentsInterface()}
+
+            <div>
+                <button onClick={() => { this.setState({ showAddStudentUserInterface: true }); }}>
+                    Add Student
+                </button>
+            </div>
             {this.renderClassContainerDetails()}
 
             {this.renderClassList()}
 
             <div>{this.state.restEngineResult}</div>
-
         </div>;
+    }
+
+    private renderAvailableStudentsInterface(): JSX.Element {
+        if (!this.state.showAddStudentUserInterface) {
+            return null;
+        }
+
+        return <RegisterStudent
+            classSelected={this.props.classToEdit}
+            onEditTargetChanged={this.props.onEditTargetChanged}
+            onClose={() => { this.setState({ showAddStudentUserInterface: false }); }} />;
     }
 
     private renderClassList(): JSX.Element {
@@ -70,16 +91,16 @@ export class AttendenceModification extends React.Component<AttendenceModificati
             method: "DELETE",
         }).then((response) => {
             // remove list
-            this.setState((prevState: AttendenceModificationState) => {
+            this.setState((prevState: AttendeeModifyState) => {
                 const classItem: IClass = Object.assign({}, this.props.classToEdit);
                 const studentIndex = classItem.studentList.indexOf(student);
 
                 classItem.studentList.splice(studentIndex, 1);
-                return {restEngineResult: null};
+                return { restEngineResult: null };
             });
         }).catch((err) => {
             // show error message
-            this.setState({restEngineResult: err});
+            this.setState({ restEngineResult: err });
         });
     }
 
