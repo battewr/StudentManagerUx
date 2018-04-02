@@ -19,7 +19,7 @@ const Class: React.StatelessComponent<ClassProperties> = (value: ClassProperties
             }}>Edit</a>
             <a href="#" onClick={() => {
                 value.onEditClassList(value.class);
-            }}>Student List</a>
+            }}>Attendee List</a>
         </div>
         <div className="class-name-container">
             <span className="class-name-label">Class Name:</span>
@@ -28,6 +28,10 @@ const Class: React.StatelessComponent<ClassProperties> = (value: ClassProperties
         <div className="class-name-container">
             <span className="class-grade-label">Semester:</span>
             <span className="class-grade-value">{value.class.semester}</span>
+        </div>
+        <div className="class-eligiblity-container">
+            <span className="class-eligiblity-label">Eligible To: </span>
+            <span className="class-eligiblity-value">{value.class.eligibleToGrade}</span>
         </div>
         <div className="class-name-container">
             <span className="class-grade-label">Year:</span>

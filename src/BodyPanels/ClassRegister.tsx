@@ -3,6 +3,7 @@ import * as uuid from "uuid";
 import { Constants } from "../shared/Constants";
 
 import "../../styles/Shared.less";
+import { GradeSelector } from "../shared/GradeSelector";
 
 
 export interface ClassRegisterProperties {
@@ -13,6 +14,7 @@ export interface ClassRegisterState {
     name: string;
     semester: string;
     year: string;
+    eligibleGrade: string;
     postResult: string;
 }
 
@@ -24,8 +26,11 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
             name: "",
             semester: "",
             year: "",
+            eligibleGrade: "K",
             postResult: null,
         };
+
+        this.onGradeChanged = this.onGradeChanged.bind(this);
     }
 
     /**
@@ -50,8 +55,18 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
                 <span className="class-name-input-text"><input type="text" placeholder="New Class Year" value={this.state.year}
                     onChange={this.onclassYearInputChanged.bind(this)} /></span>
             </div>
+            <div className="class-eligible-to-input">
+                <span className="class-eligible-to-input-title">Eligible To: </span>
+                <span className="class-eligible-to-input-text">
+                    <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.eligibleGrade} />
+                </span>
+            </div>
             <button onClick={this.onSubmitNewclass.bind(this)}>Submit</button>
             {this.renderPostResult()}</div>;
+    }
+
+    private onGradeChanged(eligibleGrade: string): void {
+        this.setState({eligibleGrade});
     }
 
     /**
@@ -78,6 +93,7 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
                 Name: this.state.name,
                 Semester: this.state.semester,
                 Year: this.state.year,
+                EligibleToGrade: this.state.eligibleGrade,
                 Id: newclassId,
             };
 

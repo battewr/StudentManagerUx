@@ -19,6 +19,7 @@ export interface IRawClass {
     _name: string;
     _id: string;
     _semester: string;
+    _eligibleToGrade: string;
     _year: string;
 
     _studentList: IRawStudent[];
