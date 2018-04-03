@@ -8,7 +8,6 @@ import "../../styles/AvailableStudentForRegistration.less";
 
 export interface RegisterStudentProperties {
     classSelected: IClass;
-    onClose(): void;
     onEditTargetChanged(newClass: IClass): void;
 }
 
@@ -31,8 +30,14 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         };
     }
 
-    public componentWillMount() {
-        // TODO rest request... to retreive the students who aren't in this class
+    public componentDidMount() {
+        $("#register-student-modal").on("shown.bs.modal", () => {
+            this.onModalLoad();
+        });
+    }
+
+    private onModalLoad() {
+        // TODO rest request... to retreive the students who aren"t in this class
         fetch(Constants.BackendUri + `eligibility?Id=${this.props.classSelected.id}`, {
             headers: {
                 "content-type": "application/json"
@@ -52,20 +57,24 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                 this.setState({ isLoading: false, error: err.message, eligibleStudentList: null });
             });
         }).catch((err) => {
-            console.log(err);
             this.setState({ isLoading: false, error: err, eligibleStudentList: null });
         });
     }
 
     public render(): JSX.Element {
-        return <div className="registration-student-list-container">
-            <img className="title-section-close-icon-img" src="./img/milker-X-icon.svg" onClick={this.props.onClose} />
-            <h2>Available Registrants</h2>
-            <div className="registration-student-container">
-                {this.renderEligibleStudentList()}
-            </div>
-            <div className="registration-student-errors">
-                {this.state.error}
+        return <div className="modal fade" id="register-student-modal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">Candidate Attendees</h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        {this.renderEligibleStudentList()}
+                    </div>
+                </div>
             </div>
         </div>;
     }
@@ -87,23 +96,36 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
     }
 
     private renderEligibleStudentList(): JSX.Element {
-
         const studentEntries: JSX.Element[] = [];
 
         if (!this.state.eligibleStudentList) {
-            return <div></div>;
+            return null;
         }
 
-        this.state.eligibleStudentList.forEach((student) => {
-            studentEntries.push(<div>
-                {student.name}
-                <button onClick={() => {
-                    this.addStudentToClass(student);
-                }}>Add</button>
-            </div>);
+        this.state.eligibleStudentList.forEach((student, index) => {
+            studentEntries.push(<tr>
+                <th scope="row">{index}</th>
+                <td>{student.name}</td>
+                <td>
+                    <button onClick={() => {
+                        this.addStudentToClass(student);
+                    }}>+</button>
+                </td>
+            </tr>);
         });
 
-        return <div>{studentEntries}</div>;
+        return <table className="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {studentEntries}
+            </tbody>
+        </table>;
     }
 
     private addStudentToClass(newStudent: IStudent) {
@@ -119,7 +141,7 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                 return;
             }
 
-            // bbax: first we need to update the state of this component so this student isn't available to
+            // bbax: first we need to update the state of this component so this student isn"t available to
             // be added to the class over and over again...
             this.setState((prevState: RegisterStudentState) => {
                 // bbax: deep copy the student list being used for eligibility (React requirement for immutable state)
@@ -146,7 +168,6 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                 this.props.onEditTargetChanged(newClass);
             });
         }).catch((err) => {
-            console.log(err);
             this.setState({ isLoading: false, error: err, eligibleStudentList: null });
         });
     }
