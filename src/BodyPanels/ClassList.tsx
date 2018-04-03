@@ -3,10 +3,10 @@ import { Constants } from "../shared/Constants";
 import { IClass } from "../shared/IClass";
 import Class from "./Class";
 import { IRawClass, IRawStudent } from "../shared/RawRestInterfaces";
-
-import "../../styles/Shared.less";
 import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
+
+import "../../styles/Shared.less";
 
 export interface ClassListProperties {
     onEditClass(classToEdit: IClass): void;
