@@ -16,7 +16,7 @@ export interface ClassListProperties {
 export interface ClassListState {
     isLoading: boolean;
     error: string;
-    classList: IRawClass[];
+    classList: IClass[];
 }
 
 /**
@@ -45,7 +45,11 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             },
             method: "GET",
         }).then((response) => {
-            response.json().then((classList: IRawClass[]) => {
+            response.json().then((rawClassList: IRawClass[]) => {
+                const classList: IClass[] = [];
+                rawClassList.forEach((rawClassItem) => {
+                    classList.push(this.convertRawClassToInternalClass(rawClassItem));
+                });
                 this.setState({ isLoading: false, error: null, classList });
             }).catch((err) => {
                 this.setState({ isLoading: false, error: err.message, classList: null });
@@ -61,30 +65,39 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
      */
     public render(): JSX.Element {
         return <div className="class-list-container">
-            {this.renderStudentList()}
+            <h2>Class Attendees</h2>
+            {this.renderClassList()}
         </div>;
     }
 
-    private renderStudentList(): JSX.Element[] {
-        if (this.state.isLoading) {
-            return [<div className="class-list-conent-loading">Loading...</div>];
-        } else if (!!this.state.error) {
-            return [<div className="class-list-content-load-failed">Error: {this.state.error}</div>];
-        } else {
-            if (!this.state.classList) {
-                return [<div className="unknown-error">Unknown Exception</div>];
-            }
-            const studentListContent: JSX.Element[] = [];
-            this.state.classList.forEach((student: IRawClass) => {
-                const mappedStudent = this.convertRawClassToInternalClass(student);
-                const studentDomEntry: JSX.Element = <div className="class-section">
-                    <Class class={mappedStudent} onEditClass={this.props.onEditClass} onEditClassList={this.props.onEditClassList} />
-                </div>;
-                studentListContent.push(studentDomEntry);
-            });
+    private renderClassList(): JSX.Element {
+        const classRenderedList: JSX.Element[] = [];
 
-            return studentListContent;
+        if (this.state.classList) {
+            this.state.classList.forEach((classItem, index) => {
+                classRenderedList.push(
+                    <Class class={classItem}
+                        index={index}
+                        onEditClass={this.props.onEditClass}
+                        onEditClassList={this.props.onEditClassList} />);
+            });
         }
+
+        return <table className="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Semester</th>
+                    <th scope="col">Eligible For</th>
+                    <th scope="col">Year Offered</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {classRenderedList}
+            </tbody>
+        </table>;
     }
 
     private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {

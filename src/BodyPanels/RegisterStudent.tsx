@@ -1,7 +1,7 @@
 import * as React from "React";
 import { IClass } from "../shared/IClass";
 import { Constants } from "../shared/Constants";
-import { IRawStudent } from "../shared/RawRestInterfaces";
+import { IRawStudent, IEligibilityContract } from "../shared/RawRestInterfaces";
 import { IStudent } from "../shared/IStudent";
 
 import "../../styles/AvailableStudentForRegistration.less";
@@ -15,6 +15,10 @@ export interface RegisterStudentState {
     isLoading: boolean;
     error: string;
     eligibleStudentList: IStudent[];
+
+    pageSize: number;
+    currentPageIndex: number;
+    estimatedLength: number;
 }
 
 export class RegisterStudent extends React.Component<RegisterStudentProperties,
@@ -27,6 +31,9 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
             isLoading: false,
             error: null,
             eligibleStudentList: null,
+            pageSize: 10,
+            currentPageIndex: 0,
+            estimatedLength: 0,
         };
     }
 
@@ -37,8 +44,10 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
     }
 
     private onModalLoad() {
+        const take = this.state.pageSize;
+        const skip = this.state.currentPageIndex * this.state.pageSize;
         // TODO rest request... to retreive the students who aren"t in this class
-        fetch(Constants.BackendUri + `eligibility?Id=${this.props.classSelected.id}`, {
+        fetch(Constants.BackendUri + `eligibility?Id=${this.props.classSelected.id}&take=${take}&skip=${skip}`, {
             headers: {
                 "content-type": "application/json"
             },
@@ -50,14 +59,14 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                 return;
             }
 
-            response.json().then((rawStudentList: IRawStudent[]) => {
-                const eligibleStudentList: IStudent[] = this.convertToStudentList(rawStudentList);
-                this.setState({ isLoading: false, error: null, eligibleStudentList });
+            response.json().then((elibility: IEligibilityContract) => {
+                const eligibleStudentList: IStudent[] = this.convertToStudentList(elibility.availableAttenenceList);
+                this.setState({ isLoading: false, error: null, eligibleStudentList, estimatedLength: elibility.estimatedSize });
             }).catch((err) => {
-                this.setState({ isLoading: false, error: err.message, eligibleStudentList: null });
+                this.setState({ isLoading: false, error: err.message, eligibleStudentList: null, estimatedLength: 0, currentPageIndex: 0 });
             });
         }).catch((err) => {
-            this.setState({ isLoading: false, error: err, eligibleStudentList: null });
+            this.setState({ isLoading: false, error: err, eligibleStudentList: null, estimatedLength: 0, currentPageIndex: 0 });
         });
     }
 
@@ -72,7 +81,8 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                         </button>
                     </div>
                     <div className="modal-body">
-                        {this.renderEligibleStudentList()}
+                        {this.renderEligibleStudentListTable()}
+                        {this.renderListPaginationNav()}
                     </div>
                 </div>
             </div>
@@ -95,7 +105,80 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         };
     }
 
-    private renderEligibleStudentList(): JSX.Element {
+    /**
+     * TODO: first unit test!!!
+     * @param state
+     */
+    private estimatedMaxPage(state: RegisterStudentState): number {
+        return Math.ceil(state.estimatedLength / state.pageSize);
+    }
+
+    private renderListPaginationNav(): JSX.Element {
+        const maxPage = this.estimatedMaxPage(this.state);
+        const prevButtonClass = this.state.currentPageIndex < 1 ? "page-item disable" : "page-item";
+        const nextButtonClass = this.state.currentPageIndex >= maxPage ? "page-item disable" : "page-item";
+
+        const paginationEntries: JSX.Element[] = [];
+        for (let i = 0; i < maxPage; i++) {
+            if (i === this.state.currentPageIndex) {
+                paginationEntries.push(<li className="page-item active">
+                    <a className="page-link" onClick={() => {
+                        this.setState({ currentPageIndex: i }, () => {
+                            this.changePage();
+                        });
+                    }} href="#">{i + 1} <span className="sr-only">(current)</span></a>
+                </li>);
+            } else {
+                paginationEntries.push(<li className="page-item">
+                    <a className="page-link" onClick={() => {
+                        this.setState({ currentPageIndex: i }, () => {
+                            this.changePage();
+                        });
+                    }} href="#">{i + 1}</a>
+                </li>);
+            }
+        }
+
+        return <nav aria-label="...">
+            <ul className="pagination">
+                <li className={prevButtonClass}>
+                    <a className="page-link" href="#" onClick={() => {
+                        this.setState((prevState: RegisterStudentState) => {
+                            let targetIndex = prevState.currentPageIndex - 1;
+                            if (targetIndex < 0) {
+                                targetIndex = 0;
+                            }
+                            return { currentPageIndex: targetIndex };
+                        }, () => {
+                            this.changePage();
+                        });
+                    }} tabIndex={-1}>Previous</a>
+                </li>
+
+                {paginationEntries}
+
+                <li className={nextButtonClass}>
+                    <a className="page-link" onClick={() => {
+                        this.setState((prevState: RegisterStudentState) => {
+                            let targetIndex = prevState.currentPageIndex + 1;
+                            if (targetIndex >= this.estimatedMaxPage(prevState)) {
+                                targetIndex = this.estimatedMaxPage(prevState) - 1;
+                            }
+                            return { currentPageIndex: targetIndex };
+                        }, () => {
+                            this.changePage();
+                        });
+                    }} href="#">Next</a>
+                </li>
+            </ul>
+        </nav>;
+    }
+
+    private changePage() {
+        this.onModalLoad();
+    }
+
+    private renderEligibleStudentListTable(): JSX.Element {
         const studentEntries: JSX.Element[] = [];
 
         if (!this.state.eligibleStudentList) {
@@ -166,6 +249,7 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
 
                 // bbax: alert out to anyone listening that this changed
                 this.props.onEditTargetChanged(newClass);
+                this.onModalLoad();
             });
         }).catch((err) => {
             this.setState({ isLoading: false, error: err, eligibleStudentList: null });

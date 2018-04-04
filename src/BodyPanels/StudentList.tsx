@@ -13,7 +13,7 @@ export interface StudentListProperties {
 export interface StudentListState {
     isLoading: boolean;
     error: string;
-    studentList: IRawStudent[];
+    studentList: IStudent[];
 }
 
 /**
@@ -42,7 +42,12 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             },
             method: "GET",
         }).then((response) => {
-            response.json().then((studentList: IRawStudent[]) => {
+            response.json().then((rawStudentList: IRawStudent[]) => {
+                const studentList: IStudent[] = [];
+                rawStudentList.forEach((rawStudent) => {
+                    const mappedStudent = this.convertRawStudentToInternalStudent(rawStudent);
+                    studentList.push(mappedStudent);
+                });
                 this.setState({ isLoading: false, error: null, studentList });
             }).catch((err) => {
                 this.setState({ isLoading: false, error: err.message, studentList: null });
@@ -58,30 +63,38 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
      */
     public render(): JSX.Element {
         return <div className="student-list-container">
+            <h2>Student List</h2>
             {this.renderStudentList()}
         </div>;
     }
 
-    private renderStudentList(): JSX.Element[] {
-        if (this.state.isLoading) {
-            return [<div className="student-list-conent-loading">Loading...</div>];
-        } else if (!!this.state.error) {
-            return [<div className="student-list-content-load-failed">Error: {this.state.error}</div>];
-        } else {
-            if (!this.state.studentList) {
-                return [<div className="unknown-error">Unknown Exception</div>];
-            }
-            const studentListContent: JSX.Element[] = [];
-            this.state.studentList.forEach((student: IRawStudent) => {
-                const mappedStudent = this.convertRawStudentToInternalStudent(student);
-                const studentDomEntry: JSX.Element = <div className="student-section">
-                    <Student student={mappedStudent} onEditStudent={this.props.onEditStudent} />
-                </div>;
-                studentListContent.push(studentDomEntry);
-            });
+    private renderStudentList(): JSX.Element {
+        const studentRenderedList: JSX.Element[] = [];
 
-            return studentListContent;
+        if (this.state.studentList) {
+            this.state.studentList.forEach((student, index) => {
+                studentRenderedList.push(
+                    <Student
+                        index={index}
+                        student={student}
+                        onEditStudent={this.props.onEditStudent} />);
+            });
         }
+
+        return <table className="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {studentRenderedList}
+            </tbody>
+        </table>;
     }
 
     private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {

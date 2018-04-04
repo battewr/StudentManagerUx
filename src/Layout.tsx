@@ -25,7 +25,7 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
         super(props);
 
         this.state = {
-            mainMenuVisible: false,
+            mainMenuVisible: true,
             selectedPanel: SelectedPanel.StudentList,
         };
 
