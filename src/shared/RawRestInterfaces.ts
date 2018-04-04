@@ -1,3 +1,7 @@
+export interface IEligibilityContract {
+    availableAttenenceList: IRawStudent[];
+    estimatedSize: number;
+}
 /**
  * This is the data as seen from the backend rest request before mapping the response into
  * the application types...

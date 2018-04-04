@@ -5,27 +5,24 @@ import "../../styles/Student.less";
 
 export interface StudentProperties {
     student: IStudent;
+    index: number;
     onEditStudent(id: IStudent): void;
 }
 
 const Student: React.StatelessComponent<StudentProperties> = (value: StudentProperties) => {
-    return <div className="student-container">
-        <div className="student-id-container">
-            <span className="student-id-label">Id: </span>
-            <span className="student-id-value">{value.student.id}</span>
+    return <tr>
+        <th scope="row">{value.index}</th>
+        <td>
+            {value.student.id}
+        </td>
+        <td>{value.student.name}</td>
+        <td>{value.student.grade}</td>
+        <td>
             <a href="#" onClick={() => {
                 value.onEditStudent(value.student);
             }}>Edit</a>
-        </div>
-        <div className="student-name-container">
-            <span className="student-name-label">Student Name:</span>
-            <span className="student-name-value">{value.student.name}</span>
-        </div>
-        <div className="student-name-container">
-            <span className="student-grade-label">Grade:</span>
-            <span className="student-grade-value">{value.student.grade}</span>
-        </div>
-    </div>;
+        </td>
+    </tr>;
 };
 
 export default Student;
