@@ -34,11 +34,19 @@ export class GradeSelector extends React.Component<GradeSelectorProperties> {
     }
 
     public render() {
-        /** TODO: make the backend given us information regarding which grades are possible */
-        return (
-            <select value={this.props.studentGrade } onChange={ this.onStudentGradeInputChanged.bind(this) }>
-                { this.getOptionList() }
-            </select >);
+        let displaySelectedGrade = "";
+        const index = availableGrades.findIndex((item) => { return item.value === this.props.studentGrade; });
+        displaySelectedGrade = availableGrades[index].displayString || "Unknown";
+        return <div className="dropdown">
+            <button className="btn btn-secondary dropdown-toggle"
+                type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                {displaySelectedGrade}
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {this.getOptionList()}
+            </div>
+        </div>;
     }
 
     /**
@@ -46,12 +54,8 @@ export class GradeSelector extends React.Component<GradeSelectorProperties> {
      * @param event
      * @returns {void}
      */
-    private onStudentGradeInputChanged(event: any): void {
-        if (!event || !event.target || !event.target.value ||
-            typeof event.target.value !== "string") {
-            throw "Input type unexpected!";
-        }
-        this.props.onStudentGradeChanged(event.target.value);
+    private onStudentGradeInputChanged(grade: string): void {
+        this.props.onStudentGradeChanged(grade);
     }
 
     /**
@@ -59,13 +63,22 @@ export class GradeSelector extends React.Component<GradeSelectorProperties> {
      * @returns {JSX.Element[]}
      */
     private getOptionList(): JSX.Element[] {
+        //                 {/* <a className="dropdown-item" href="#">Action</a>
+        //   <a className="dropdown-item" href="#">Another action</a>
+        //   <a className="dropdown-item" href="#">Something else here</a> */}
         const returnList: JSX.Element[] = [];
 
         availableGrades.forEach((grade) => {
-            returnList.push(
-                <option selected={this.props.studentGrade === grade.value} value={grade.value}>
-                    {grade.displayString}
-                </option>);
+            // returnList.push(
+            //     <option selected={this.props.studentGrade === grade.value} value={grade.value}>
+            //         {grade.displayString}
+            //     </option>);
+            returnList.push(<a className="dropdown-item"
+                onClick={() => {
+                    this.props.onStudentGradeChanged(grade.value);
+                }} href="#">
+                {grade.displayString}
+            </a>);
         });
 
         return returnList;

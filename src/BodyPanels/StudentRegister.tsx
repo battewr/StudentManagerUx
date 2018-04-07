@@ -36,18 +36,23 @@ export class StudentRegister extends React.Component<StudentRegisterProperties, 
     public render(): JSX.Element {
         return <div className="create-student-container">
             <h2 className="unselectable"> Create a new Student! </h2>
-            <div className="student-name-input">
-                <span className="student-name-input-title">Student Name: </span>
-                <span className="student-name-input-text"><input type="text" placeholder="New Student Name" value={this.state.studentName}
-                    onChange={this.onStudentNameInputChanged.bind(this)} /></span>
+
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.studentName}
+                    onChange={this.onStudentNameInputChanged.bind(this)} />
             </div>
+
             <div className="student-grade-input">
                 <span className="student-grade-input-title">Student Grade: </span>
                 <span className="student-grade-input-text">
                     <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.studentGrade} />
                 </span>
             </div>
-            <button onClick={this.onSubmitNewStudent.bind(this)}>Submit</button>
+            <button type="button" onClick={this.onSubmitNewStudent.bind(this)} className="btn btn-secondary margin-top">Create Student</button>
             {this.renderPostResult()}</div>;
     }
 
@@ -65,7 +70,7 @@ export class StudentRegister extends React.Component<StudentRegisterProperties, 
     }
 
     private onGradeChanged(studentGrade: string): void {
-        this.setState({studentGrade});
+        this.setState({ studentGrade });
     }
 
     /**

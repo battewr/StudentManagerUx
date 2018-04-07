@@ -3,9 +3,10 @@ import { IClass } from "../shared/IClass";
 import { Constants } from "../shared/Constants";
 import { IRawStudent, IEligibilityContract } from "../shared/RawRestInterfaces";
 import { IStudent } from "../shared/IStudent";
-
-import "../../styles/AvailableStudentForRegistration.less";
 import { List, ListColumnDefinition } from "../shared/Components/List";
+
+import "../../styles/Shared.less";
+import "../../styles/AvailableStudentForRegistration.less";
 
 class RegisterStudentListContainer extends List<IStudent> { }
 
@@ -118,12 +119,12 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
             pageSize={this.state.pageSize}
             selectedPage={this.state.currentPageIndex}
             estimatedMaxItems={this.state.estimatedLength}
-            loadPage={ (targetIndex: number) => {
-                this.setState({currentPageIndex: targetIndex}, () => {
+            loadPage={(targetIndex: number) => {
+                this.setState({ currentPageIndex: targetIndex }, () => {
                     this.onModalLoad();
                 });
             }}
-             />;
+        />;
     }
 
     private makeColumns(): ListColumnDefinition<IStudent>[] {
@@ -131,17 +132,15 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         columns.push({
             titleDisplayValue: "Name",
             renderer: (student: IStudent): JSX.Element => {
-                return <span>{student.name}</span>;
+                return <div className="padding-top">{student.name}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Actions",
             renderer: (student: IStudent): JSX.Element => {
-                return <div>
-                    <button onClick={() => {
-                        this.addStudentToClass(student);
-                    }}>+</button>
-                </div>;
+                return <button type="button" className="btn btn-info btn-sm" onClick={() => {
+                    this.addStudentToClass(student);
+                }}>+</button>;
             }
         });
         return columns;

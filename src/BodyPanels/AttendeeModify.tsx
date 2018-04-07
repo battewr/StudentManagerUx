@@ -6,6 +6,7 @@ import { Constants } from "../shared/Constants";
 import { RegisterStudent } from "./RegisterStudent";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
+import "../../styles/Shared.less";
 import "../../styles/AttendenceModifications.less";
 
 class AttendeeModifyListContainer extends List<IStudent> { }
@@ -75,12 +76,10 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
         return <div className="attendee-modify-classlist-container">
             <h3 className="classlist-header">Attendee List</h3>
             <span className="classlist-add-attendee">
-                <button className="btn btn-primary" onClick={() => {
+                <button className="btn btn-info" onClick={() => {
                     const component: any = $("#register-student-modal");
                     component.modal("show");
-                }}>
-                    +
-                </button>
+                }}>Add Student</button>
             </span>
             <AttendeeModifyListContainer
                 data={this.props.classToEdit.studentList}
@@ -94,25 +93,23 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
         columns.push({
             titleDisplayValue: "Id",
             renderer: (student: IStudent): JSX.Element => {
-                return <span>{student.id}</span>;
+                return <div className="padding-top">{student.id}</div>;
             }
         });
 
         columns.push({
             titleDisplayValue: "Name",
             renderer: (student: IStudent): JSX.Element => {
-                return <span>{student.name}</span>;
+                return <div className="padding-top">{student.name}</div>;
             }
         });
 
         columns.push({
             titleDisplayValue: "Actions",
             renderer: (student: IStudent): JSX.Element => {
-                return <div>
-                    <a href="#" onClick={() => {
-                        this.removeStudentFromClass(this.props.classToEdit.id, student);
-                    }}>Remove</a>
-                </div>;
+                return <div><button type="button" className="btn btn-info btn-sm" onClick={() => {
+                    this.removeStudentFromClass(this.props.classToEdit.id, student);
+                }}>Remove</button></div>;
             }
         });
 

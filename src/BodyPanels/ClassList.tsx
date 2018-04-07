@@ -85,37 +85,38 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
         columns.push({
             titleDisplayValue: "Name",
             renderer: (classItem: IClass): JSX.Element => {
-                return <span>{classItem.name}</span>;
+                return <div className="padding-top">{classItem.name}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Semester",
             renderer: (classItem: IClass): JSX.Element => {
-                return <span>{classItem.semester}</span>;
+                return <div className="padding-top">{classItem.semester}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Eligible For",
             renderer: (classItem: IClass): JSX.Element => {
-                return <span>{classItem.eligibleToGrade}</span>;
+                return <div className="padding-top">{classItem.eligibleToGrade}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Year Offered",
             renderer: (classItem: IClass): JSX.Element => {
-                return <span>{classItem.year}</span>;
+                return <div className="padding-top">{classItem.year}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Actions",
             renderer: (classItem: IClass): JSX.Element => {
                 return <div>
-                    <a href="#" onClick={() => {
+                    <button type="button" className="btn btn-info btn-sm" onClick={() => {
                         this.props.onEditClass(classItem);
-                    }}>Edit</a>
-                    <a href="#" onClick={() => {
+                    }}>Edit</button>&nbsp;
+                    <button type="button" className="btn btn-info btn-sm" onClick={() => {
                         this.props.onEditClassList(classItem);
-                    }}>Attendee List</a></div>;
+                    }}>Attendee List</button>
+                </div>;
             }
         });
         return columns;

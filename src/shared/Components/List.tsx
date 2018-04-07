@@ -1,5 +1,8 @@
 import * as React from "react";
 
+import "../../../styles/shared.less";
+import "../../../styles/List.less";
+
 export interface ListColumnDefinition<T> {
     titleDisplayValue: string;
     renderer: (valueToRender: T) => JSX.Element;
@@ -42,9 +45,9 @@ export class List<T> extends React.Component<ListProperties<T>> {
 
     private generateListHeader(): JSX.Element[] {
         const headerEntries: JSX.Element[] = [];
-        headerEntries.push(<th scope="col">#</th>);
+        headerEntries.push(<th scope="col" className="margin-reset">#</th>);
         this.props.columns.forEach((column) => {
-            headerEntries.push(<th scope="col">{column.titleDisplayValue}</th>);
+            headerEntries.push(<th scope="col" className="margin-reset">{column.titleDisplayValue}</th>);
         });
         return headerEntries;
     }
@@ -59,13 +62,15 @@ export class List<T> extends React.Component<ListProperties<T>> {
             const columnEntries: JSX.Element[] = [];
 
             // bbax: hard coded # indication row corresponding to header hard coding
-            columnEntries.push(<th scope="row">{index}</th>);
+            columnEntries.push(<th scope="row" className="margin-reset">
+            <div className="padding-top">{index}</div></th>);
             this.props.columns.forEach((column) => {
                 // bbax: render cell and place inside the TD, rollup to row
                 const renderedListEntry = column.renderer(dataEntry);
-                columnEntries.push(<td>{renderedListEntry}</td>);
+                columnEntries.push(<td className="margin-reset">{renderedListEntry}</td>);
             });
-            bodyEntries.push(<tr>{columnEntries}</tr>);
+            const backgroundStyle = index % 2 === 0 ? "alternate-background" : "";
+            bodyEntries.push(<tr className={backgroundStyle}>{columnEntries}</tr>);
         });
         return bodyEntries;
     }
@@ -113,15 +118,6 @@ export class List<T> extends React.Component<ListProperties<T>> {
 
                 <li className={nextButtonClass}>
                     <a className="page-link" onClick={() => {
-                        // this.setState((prevState: ListState) => {
-                        //     let targetIndex = prevState.selectedPage + 1;
-                        //     if (targetIndex >= this.estimatedMaxPage(this.props)) {
-                        //         targetIndex = this.estimatedMaxPage(this.props) - 1;
-                        //     }
-                        //     return { selectedPage: targetIndex };
-                        // }, () => {
-                        //     // this.changePage();
-                        // });
                         this.props.loadPage(this.props.selectedPage - 1);
                     }} href="#">Next</a>
                 </li>

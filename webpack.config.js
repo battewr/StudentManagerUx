@@ -39,6 +39,7 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
-        "jquery": "$"
+        "jquery": "$",
+        "popper.js": "Popper"
     },
 };
