@@ -1,5 +1,6 @@
 import * as React from "React";
 import { IClass } from "../shared/IClass";
+import { GradeSelector } from "../shared/GradeSelector";
 import { Constants } from "../shared/Constants";
 
 export interface ClassModifyProperites {
@@ -20,36 +21,59 @@ export class ClassModify extends React.Component<ClassModifyProperites, ClassMod
             classToEdit: Object.assign({}, props.classToEdit),
             putResponse: null,
         };
+
+        this.onGradeChanged = this.onGradeChanged.bind(this);
     }
 
     public render() {
         return <div>
             <h2> Edit class </h2>
-            <div>
-                <span>Id: </span>
+            <div className="label-class-id-root">
+                <span className="label-class-id-title">Id: </span>
                 <span>{this.state.classToEdit.id}</span>
             </div>
-            <div>
-                <span>Name: </span>
-                <span>
-                    <input type="text" value={this.state.classToEdit.name} onChange={this.onClassNameInputChanged.bind(this)} />
-                </span>
+
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.classToEdit.name}
+                    onChange={this.onClassNameInputChanged.bind(this)} />
+            </div>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Semester</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.classToEdit.semester}
+                    onChange={this.onClassSemesterInputChanged.bind(this)} />
+            </div>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Year</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.classToEdit.year}
+                    onChange={this.onClassYearInputChanged.bind(this)} />
             </div>
             <div>
-                <span>Semester: </span>
+                <span>Grade: </span>
                 <span>
-                    <input type="text" value={this.state.classToEdit.semester} onChange={this.onClassSemesterInputChanged.bind(this)} />
+                    <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.classToEdit.eligibleToGrade} />
                 </span>
             </div>
-            <div>
-                <span>Year: </span>
-                <span>
-                    <input type="text" value={this.state.classToEdit.year} onChange={this.onClassYearInputChanged.bind(this)} />
-                </span>
-            </div>
-            <button onClick={this.onSubmitNewClassDetails.bind(this)}>Submit</button>
+            <button type="button" onClick={this.onSubmitNewClassDetails.bind(this)} className="btn btn-secondary margin-top">Save</button>
             <div>{this.state.putResponse}</div>
         </div>;
+    }
+
+    private onGradeChanged(studentGrade: string) {
+        this.setState((prevState: ClassModifyState) => {
+            const classToEdit: IClass = Object.assign({}, prevState.classToEdit);
+            classToEdit.eligibleToGrade = studentGrade;
+            return { classToEdit };
+        });
     }
 
     private onSubmitNewClassDetails() {
@@ -59,6 +83,7 @@ export class ClassModify extends React.Component<ClassModifyProperites, ClassMod
                 Semester: this.state.classToEdit.semester,
                 Id: this.state.classToEdit.id,
                 Year: this.state.classToEdit.year,
+                EligibleToGrade: this.state.classToEdit.eligibleToGrade,
             };
             const classId: string = this.state.classToEdit.id;
 

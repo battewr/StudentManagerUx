@@ -40,20 +40,29 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
     public render(): JSX.Element {
         return <div className="create-class-container">
             <h2 className="unselectable"> Register a new Class! </h2>
-            <div className="class-name-input">
-                <span className="class-name-input-title">Name: </span>
-                <span className="class-name-input-text"><input type="text" placeholder="New Class Name" value={this.state.name}
-                    onChange={this.onClassNameInputChanged.bind(this)} /></span>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.name}
+                    onChange={this.onClassNameInputChanged.bind(this)} />
             </div>
-            <div className="class-name-input">
-                <span className="class-name-input-title">Semester: </span>
-                <span className="class-name-input-text"><input type="text" placeholder="New Class Semester" value={this.state.semester}
-                    onChange={this.onClassSemesterInputChanged.bind(this)} /></span>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Semester</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.semester}
+                    onChange={this.onClassSemesterInputChanged.bind(this)} />
             </div>
-            <div className="class-name-input">
-                <span className="class-name-input-title">Year: </span>
-                <span className="class-name-input-text"><input type="text" placeholder="New Class Year" value={this.state.year}
-                    onChange={this.onclassYearInputChanged.bind(this)} /></span>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Year</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.year}
+                    onChange={this.onclassYearInputChanged.bind(this)} />
             </div>
             <div className="class-eligible-to-input">
                 <span className="class-eligible-to-input-title">Eligible To: </span>
@@ -61,12 +70,13 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
                     <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.eligibleGrade} />
                 </span>
             </div>
-            <button onClick={this.onSubmitNewclass.bind(this)}>Submit</button>
+            <button type="button" onClick={this.onSubmitNewclass.bind(this)}
+                className="btn btn-secondary margin-top">Create Class</button>
             {this.renderPostResult()}</div>;
     }
 
     private onGradeChanged(eligibleGrade: string): void {
-        this.setState({eligibleGrade});
+        this.setState({ eligibleGrade });
     }
 
     /**

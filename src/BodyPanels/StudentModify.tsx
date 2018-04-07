@@ -3,6 +3,8 @@ import { IStudent } from "../shared/IStudent";
 import { GradeSelector } from "../shared/GradeSelector";
 import { Constants } from "../shared/Constants";
 
+import "../../styles/StudentModify.less";
+
 export interface StudentModifyProperites {
     studentToEdit: IStudent;
 }
@@ -28,15 +30,17 @@ export class StudentModify extends React.Component<StudentModifyProperites, Stud
     public render() {
         return <div>
             <h2> Edit Student </h2>
-            <div>
-                <span>Id: </span>
+            <div className="label-class-id-root">
+                <span className="label-class-id-title">Id: </span>
                 <span>{this.state.studentToEdit.id}</span>
             </div>
-            <div>
-                <span>Name: </span>
-                <span>
-                    <input type="text" value={this.state.studentToEdit.name} onChange={this.onStudentNameInputChanged.bind(this)} />
-                </span>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input type="text" className="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" value={this.state.studentToEdit.name}
+                    onChange={this.onStudentNameInputChanged.bind(this)} />
             </div>
             <div>
                 <span>Grade: </span>
@@ -44,7 +48,7 @@ export class StudentModify extends React.Component<StudentModifyProperites, Stud
                     <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.studentToEdit.grade} />
                 </span>
             </div>
-            <button onClick={this.onSubmitNewStudentDetails.bind(this)}>Submit</button>
+            <button type="button" onClick={this.onSubmitNewStudentDetails.bind(this)} className="btn btn-secondary margin-top">Save</button>
             <div>{this.state.putResponse}</div>
         </div>;
     }
