@@ -1,12 +1,14 @@
 import * as React from "React";
 import { Constants } from "../shared/Constants";
 import { IClass } from "../shared/IClass";
-import Class from "./Class";
 import { IRawClass, IRawStudent } from "../shared/RawRestInterfaces";
 import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
+import { List, ListColumnDefinition } from "../shared/Components/List";
 
 import "../../styles/Shared.less";
+
+class ClassListContainer extends List<IClass> { }
 
 export interface ClassListProperties {
     onEditClass(classToEdit: IClass): void;
@@ -35,6 +37,8 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             error: null,
             classList: null
         };
+
+        this.makeColumns = this.makeColumns.bind(this);
     }
 
     public componentDidMount() {
@@ -71,33 +75,50 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
     }
 
     private renderClassList(): JSX.Element {
-        const classRenderedList: JSX.Element[] = [];
+        return <ClassListContainer
+            columns={this.makeColumns()}
+            data={this.state.classList} />;
+    }
 
-        if (this.state.classList) {
-            this.state.classList.forEach((classItem, index) => {
-                classRenderedList.push(
-                    <Class class={classItem}
-                        index={index}
-                        onEditClass={this.props.onEditClass}
-                        onEditClassList={this.props.onEditClassList} />);
-            });
-        }
-
-        return <table className="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Semester</th>
-                    <th scope="col">Eligible For</th>
-                    <th scope="col">Year Offered</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {classRenderedList}
-            </tbody>
-        </table>;
+    private makeColumns(): ListColumnDefinition<IClass>[] {
+        const columns: ListColumnDefinition<IClass>[] = [];
+        columns.push({
+            titleDisplayValue: "Name",
+            renderer: (classItem: IClass): JSX.Element => {
+                return <span>{classItem.name}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Semester",
+            renderer: (classItem: IClass): JSX.Element => {
+                return <span>{classItem.semester}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Eligible For",
+            renderer: (classItem: IClass): JSX.Element => {
+                return <span>{classItem.eligibleToGrade}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Year Offered",
+            renderer: (classItem: IClass): JSX.Element => {
+                return <span>{classItem.year}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Actions",
+            renderer: (classItem: IClass): JSX.Element => {
+                return <div>
+                    <a href="#" onClick={() => {
+                        this.props.onEditClass(classItem);
+                    }}>Edit</a>
+                    <a href="#" onClick={() => {
+                        this.props.onEditClassList(classItem);
+                    }}>Attendee List</a></div>;
+            }
+        });
+        return columns;
     }
 
     private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {

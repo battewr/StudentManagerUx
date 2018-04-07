@@ -4,8 +4,11 @@ import { IClass } from "../shared/IClass";
 import { IStudent } from "../shared/IStudent";
 import { Constants } from "../shared/Constants";
 import { RegisterStudent } from "./RegisterStudent";
+import { List, ListColumnDefinition } from "../shared/Components/List";
 
 import "../../styles/AttendenceModifications.less";
+
+class AttendeeModifyListContainer extends List<IStudent> { }
 
 interface PageAlertEntry {
     pageAlert: string;
@@ -69,28 +72,6 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
     }
 
     private renderClassList(): JSX.Element {
-        const studentList: IStudent[] = this.props.classToEdit.studentList;
-
-        const studentRenderedList: JSX.Element[] = [];
-        studentList.forEach((student, index) => {
-            const studentItem = <tr>
-                <th scope="row">{index}</th>
-                <td>
-                    <span className="student-id">{student.id}</span>
-                    <img className="student-id-clipboard-copy-img" src="./img/copy.svg" onClick={() => {
-                        this.onCopyToClipboardClicked(student);
-                    }} />
-                </td>
-                <td>{student.name}</td>
-                <td>
-                    <a href="#" onClick={() => {
-                        this.removeStudentFromClass(this.props.classToEdit.id, student);
-                    }}>Remove</a>
-                </td>
-            </tr>;
-            studentRenderedList.push(studentItem);
-        });
-
         return <div className="attendee-modify-classlist-container">
             <h3 className="classlist-header">Attendee List</h3>
             <span className="classlist-add-attendee">
@@ -101,19 +82,41 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
                     +
                 </button>
             </span>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {studentRenderedList}
-                </tbody>
-            </table></div>;
+            <AttendeeModifyListContainer
+                data={this.props.classToEdit.studentList}
+                columns={this.makeColumns()} />
+        </div>;
+    }
+
+    private makeColumns(): ListColumnDefinition<IStudent>[] {
+        const columns: ListColumnDefinition<IStudent>[] = [];
+
+        columns.push({
+            titleDisplayValue: "Id",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.id}</span>;
+            }
+        });
+
+        columns.push({
+            titleDisplayValue: "Name",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.name}</span>;
+            }
+        });
+
+        columns.push({
+            titleDisplayValue: "Actions",
+            renderer: (student: IStudent): JSX.Element => {
+                return <div>
+                    <a href="#" onClick={() => {
+                        this.removeStudentFromClass(this.props.classToEdit.id, student);
+                    }}>Remove</a>
+                </div>;
+            }
+        });
+
+        return columns;
     }
 
     private onCopyToClipboardClicked(student: IStudent) {

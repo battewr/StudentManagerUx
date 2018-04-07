@@ -1,10 +1,12 @@
 import * as React from "React";
 import { Constants } from "../shared/Constants";
-import Student from "./Student";
 import { IStudent } from "../shared/IStudent";
 import { IRawStudent } from "../shared/RawRestInterfaces";
+import { List, ListColumnDefinition } from "../shared/Components/List";
 
 import "../../styles/Shared.less";
+
+class StudentListContainer extends List<IStudent> { }
 
 export interface StudentListProperties {
     onEditStudent(studentId: IStudent): void;
@@ -69,32 +71,41 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
     }
 
     private renderStudentList(): JSX.Element {
-        const studentRenderedList: JSX.Element[] = [];
+        return <StudentListContainer
+            data={this.state.studentList}
+            columns={this.makeColumns()} />;
+    }
 
-        if (this.state.studentList) {
-            this.state.studentList.forEach((student, index) => {
-                studentRenderedList.push(
-                    <Student
-                        index={index}
-                        student={student}
-                        onEditStudent={this.props.onEditStudent} />);
-            });
-        }
-
-        return <table className="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Grade</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {studentRenderedList}
-            </tbody>
-        </table>;
+    private makeColumns(): ListColumnDefinition<IStudent>[] {
+        const columns: ListColumnDefinition<IStudent>[] = [];
+        columns.push({
+            titleDisplayValue: "Name",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.name}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Id",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.id}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Grade",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.grade}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Actions",
+            renderer: (student: IStudent): JSX.Element => {
+                return <div>
+                    <a href="#" onClick={() => {
+                        this.props.onEditStudent(student);
+                    }}>Edit</a></div>;
+            }
+        });
+        return columns;
     }
 
     private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {

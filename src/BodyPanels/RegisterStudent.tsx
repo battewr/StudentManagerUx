@@ -5,6 +5,9 @@ import { IRawStudent, IEligibilityContract } from "../shared/RawRestInterfaces";
 import { IStudent } from "../shared/IStudent";
 
 import "../../styles/AvailableStudentForRegistration.less";
+import { List, ListColumnDefinition } from "../shared/Components/List";
+
+class RegisterStudentListContainer extends List<IStudent> { }
 
 export interface RegisterStudentProperties {
     classSelected: IClass;
@@ -82,7 +85,6 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
                     </div>
                     <div className="modal-body">
                         {this.renderEligibleStudentListTable()}
-                        {this.renderListPaginationNav()}
                     </div>
                 </div>
             </div>
@@ -105,110 +107,44 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         };
     }
 
-    /**
-     * TODO: first unit test!!!
-     * @param state
-     */
-    private estimatedMaxPage(state: RegisterStudentState): number {
-        return Math.ceil(state.estimatedLength / state.pageSize);
-    }
-
-    private renderListPaginationNav(): JSX.Element {
-        const maxPage = this.estimatedMaxPage(this.state);
-        const prevButtonClass = this.state.currentPageIndex < 1 ? "page-item disable" : "page-item";
-        const nextButtonClass = this.state.currentPageIndex >= maxPage ? "page-item disable" : "page-item";
-
-        const paginationEntries: JSX.Element[] = [];
-        for (let i = 0; i < maxPage; i++) {
-            if (i === this.state.currentPageIndex) {
-                paginationEntries.push(<li className="page-item active">
-                    <a className="page-link" onClick={() => {
-                        this.setState({ currentPageIndex: i }, () => {
-                            this.changePage();
-                        });
-                    }} href="#">{i + 1} <span className="sr-only">(current)</span></a>
-                </li>);
-            } else {
-                paginationEntries.push(<li className="page-item">
-                    <a className="page-link" onClick={() => {
-                        this.setState({ currentPageIndex: i }, () => {
-                            this.changePage();
-                        });
-                    }} href="#">{i + 1}</a>
-                </li>);
-            }
-        }
-
-        return <nav aria-label="...">
-            <ul className="pagination">
-                <li className={prevButtonClass}>
-                    <a className="page-link" href="#" onClick={() => {
-                        this.setState((prevState: RegisterStudentState) => {
-                            let targetIndex = prevState.currentPageIndex - 1;
-                            if (targetIndex < 0) {
-                                targetIndex = 0;
-                            }
-                            return { currentPageIndex: targetIndex };
-                        }, () => {
-                            this.changePage();
-                        });
-                    }} tabIndex={-1}>Previous</a>
-                </li>
-
-                {paginationEntries}
-
-                <li className={nextButtonClass}>
-                    <a className="page-link" onClick={() => {
-                        this.setState((prevState: RegisterStudentState) => {
-                            let targetIndex = prevState.currentPageIndex + 1;
-                            if (targetIndex >= this.estimatedMaxPage(prevState)) {
-                                targetIndex = this.estimatedMaxPage(prevState) - 1;
-                            }
-                            return { currentPageIndex: targetIndex };
-                        }, () => {
-                            this.changePage();
-                        });
-                    }} href="#">Next</a>
-                </li>
-            </ul>
-        </nav>;
-    }
-
     private changePage() {
         this.onModalLoad();
     }
 
     private renderEligibleStudentListTable(): JSX.Element {
-        const studentEntries: JSX.Element[] = [];
+        return <RegisterStudentListContainer
+            data={this.state.eligibleStudentList}
+            columns={this.makeColumns()}
+            pageSize={this.state.pageSize}
+            selectedPage={this.state.currentPageIndex}
+            estimatedMaxItems={this.state.estimatedLength}
+            loadPage={ (targetIndex: number) => {
+                this.setState({currentPageIndex: targetIndex}, () => {
+                    this.onModalLoad();
+                });
+            }}
+             />;
+    }
 
-        if (!this.state.eligibleStudentList) {
-            return null;
-        }
-
-        this.state.eligibleStudentList.forEach((student, index) => {
-            studentEntries.push(<tr>
-                <th scope="row">{index}</th>
-                <td>{student.name}</td>
-                <td>
+    private makeColumns(): ListColumnDefinition<IStudent>[] {
+        const columns: ListColumnDefinition<IStudent>[] = [];
+        columns.push({
+            titleDisplayValue: "Name",
+            renderer: (student: IStudent): JSX.Element => {
+                return <span>{student.name}</span>;
+            }
+        });
+        columns.push({
+            titleDisplayValue: "Actions",
+            renderer: (student: IStudent): JSX.Element => {
+                return <div>
                     <button onClick={() => {
                         this.addStudentToClass(student);
                     }}>+</button>
-                </td>
-            </tr>);
+                </div>;
+            }
         });
-
-        return <table className="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {studentEntries}
-            </tbody>
-        </table>;
+        return columns;
     }
 
     private addStudentToClass(newStudent: IStudent) {
