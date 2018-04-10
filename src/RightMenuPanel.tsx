@@ -20,6 +20,8 @@ const menuOptions: RightMenuPanelOptions[] = [
     {key: SelectedPanel.StudentList, displayValue: "Student List"},
     {key: SelectedPanel.ClassRegistration, displayValue: "Register Class"},
     {key: SelectedPanel.ClassList, displayValue: "Full Class List"},
+    {key: SelectedPanel.GuardianList, displayValue: "Guardian List"},
+    {key: SelectedPanel.GuardianRegistration, displayValue: "Register Guardian"},
 ];
 
 export class RightMenuPanel extends React.Component<RightMenuPanelProperties> {

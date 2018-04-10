@@ -28,3 +28,11 @@ export interface IRawClass {
 
     _studentList: IRawStudent[];
 }
+
+export interface IRawGuardian {
+    _name: string;
+    _id: string;
+    _email: string;
+
+    _studentList: IRawStudent[];
+}

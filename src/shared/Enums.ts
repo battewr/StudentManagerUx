@@ -6,4 +6,8 @@ export enum SelectedPanel {
     ClassList,
     ClassModification,
     AttendenceModification,
+    GuardianRegistration,
+    GuardianList,
+    GuardianModification,
+    GuardianAssociation,
 };
