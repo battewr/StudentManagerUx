@@ -6,7 +6,7 @@ import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 
 class ClassListContainer extends List<IClass> { }
 
@@ -85,25 +85,25 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
         columns.push({
             titleDisplayValue: "Name",
             renderer: (classItem: IClass): JSX.Element => {
-                return <div className="padding-top">{classItem.name}</div>;
+                return <div className="cx-padding-top">{classItem.name}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Semester",
             renderer: (classItem: IClass): JSX.Element => {
-                return <div className="padding-top">{classItem.semester}</div>;
+                return <div className="cx-padding-top">{classItem.semester}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Eligible For",
             renderer: (classItem: IClass): JSX.Element => {
-                return <div className="padding-top">{classItem.eligibleToGrade}</div>;
+                return <div className="cx-padding-top">{classItem.eligibleToGrade}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Year Offered",
             renderer: (classItem: IClass): JSX.Element => {
-                return <div className="padding-top">{classItem.year}</div>;
+                return <div className="cx-padding-top">{classItem.year}</div>;
             }
         });
         columns.push({

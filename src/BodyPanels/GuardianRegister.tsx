@@ -2,7 +2,7 @@ import * as React from "React";
 import * as uuid from "uuid";
 import { Constants } from "../shared/Constants";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 import { GradeSelector } from "../shared/GradeSelector";
 import { EmailInput } from "../shared/Components/EmailInput";
 
@@ -57,7 +57,7 @@ export class GuardianRegister extends React.Component<
         <button
           type="button"
           onClick={this.onSubmitNewGuardian.bind(this)}
-          className="btn btn-secondary margin-top"
+          className="btn btn-secondary cx-margin-top"
         >
           Register Guardian
         </button>

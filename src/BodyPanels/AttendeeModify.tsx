@@ -6,7 +6,7 @@ import { Constants } from "../shared/Constants";
 import { RegisterStudent } from "./RegisterStudent";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 import "../../styles/AttendenceModifications.less";
 
 class AttendeeModifyListContainer extends List<IStudent> { }
@@ -93,14 +93,14 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
         columns.push({
             titleDisplayValue: "Id",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.id}</div>;
+                return <div className="cx-padding-top">{student.id}</div>;
             }
         });
 
         columns.push({
             titleDisplayValue: "Name",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.name}</div>;
+                return <div className="cx-padding-top">{student.name}</div>;
             }
         });
 

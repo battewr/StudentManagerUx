@@ -1,7 +1,7 @@
 import * as React from "React";
 import { SelectedPanel } from "./shared/Enums";
 
-import "../styles/Shared.less";
+import "../styles/MainShared.less";
 import "../styles/RightMenuPanel.less";
 
 export interface RightMenuPanelProperties {

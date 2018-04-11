@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import { Constants } from "../shared/Constants";
 import { GradeSelector } from "../shared/GradeSelector";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 
 
 export interface StudentRegisterProperties {
@@ -52,7 +52,7 @@ export class StudentRegister extends React.Component<StudentRegisterProperties, 
                     <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.studentGrade} />
                 </span>
             </div>
-            <button type="button" onClick={this.onSubmitNewStudent.bind(this)} className="btn btn-secondary margin-top">Create Student</button>
+            <button type="button" onClick={this.onSubmitNewStudent.bind(this)} className="btn btn-secondary cx-margin-top">Create Student</button>
             {this.renderPostResult()}</div>;
     }
 

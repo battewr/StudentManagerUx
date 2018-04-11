@@ -4,7 +4,7 @@ import { IStudent } from "../shared/IStudent";
 import { IRawStudent } from "../shared/RawRestInterfaces";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 
 class StudentListContainer extends List<IStudent> { }
 
@@ -81,19 +81,19 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         columns.push({
             titleDisplayValue: "Name",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.name}</div>;
+                return <div className="cx-padding-top">{student.name}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Id",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.id}</div>;
+                return <div className="cx-padding-top">{student.id}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Grade",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.grade}</div>;
+                return <div className="cx-padding-top">{student.grade}</div>;
             }
         });
         columns.push({

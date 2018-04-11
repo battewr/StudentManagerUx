@@ -63,7 +63,7 @@ export class ClassModify extends React.Component<ClassModifyProperites, ClassMod
                     <GradeSelector onStudentGradeChanged={this.onGradeChanged} studentGrade={this.state.classToEdit.eligibleToGrade} />
                 </span>
             </div>
-            <button type="button" onClick={this.onSubmitNewClassDetails.bind(this)} className="btn btn-secondary margin-top">Save</button>
+            <button type="button" onClick={this.onSubmitNewClassDetails.bind(this)} className="btn btn-secondary cx-margin-top">Save</button>
             <div>{this.state.putResponse}</div>
         </div>;
     }
