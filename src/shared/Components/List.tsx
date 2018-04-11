@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "../../../styles/shared.less";
+import "../../../styles/Mainshared.less";
 import "../../../styles/List.less";
 
 export interface ListColumnDefinition<T> {
@@ -63,7 +63,7 @@ export class List<T> extends React.Component<ListProperties<T>> {
 
             // bbax: hard coded # indication row corresponding to header hard coding
             columnEntries.push(<th scope="row" className="margin-reset">
-            <div className="padding-top">{index}</div></th>);
+            <div className="cx-padding-top">{index}</div></th>);
             this.props.columns.forEach((column) => {
                 // bbax: render cell and place inside the TD, rollup to row
                 const renderedListEntry = column.renderer(dataEntry);

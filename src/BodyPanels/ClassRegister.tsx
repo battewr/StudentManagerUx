@@ -2,7 +2,7 @@ import * as React from "React";
 import * as uuid from "uuid";
 import { Constants } from "../shared/Constants";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 import { GradeSelector } from "../shared/GradeSelector";
 
 
@@ -71,7 +71,7 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
                 </span>
             </div>
             <button type="button" onClick={this.onSubmitNewclass.bind(this)}
-                className="btn btn-secondary margin-top">Create Class</button>
+                className="btn btn-secondary cx-margin-top">Create Class</button>
             {this.renderPostResult()}</div>;
     }
 

@@ -6,7 +6,7 @@ import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 
 class ClassListContainer extends List<IGuardian> { }
 
@@ -85,13 +85,13 @@ export class GuardianList extends React.Component<GuardianListProperties, Guardi
         columns.push({
             titleDisplayValue: "Name",
             renderer: (guardianItem: IGuardian): JSX.Element => {
-                return <div className="padding-top">{guardianItem.name}</div>;
+                return <div className="cx-padding-top">{guardianItem.name}</div>;
             }
         });
         columns.push({
             titleDisplayValue: "Email",
             renderer: (guardianItem: IGuardian): JSX.Element => {
-                return <div className="padding-top">{guardianItem.email}</div>;
+                return <div className="cx-padding-top">{guardianItem.email}</div>;
             }
         });
         columns.push({

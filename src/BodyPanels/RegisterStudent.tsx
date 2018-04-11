@@ -5,7 +5,7 @@ import { IRawStudent, IEligibilityContract } from "../shared/RawRestInterfaces";
 import { IStudent } from "../shared/IStudent";
 import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/Shared.less";
+import "../../styles/MainShared.less";
 import "../../styles/AvailableStudentForRegistration.less";
 
 class RegisterStudentListContainer extends List<IStudent> { }
@@ -132,7 +132,7 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         columns.push({
             titleDisplayValue: "Name",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="padding-top">{student.name}</div>;
+                return <div className="cx-padding-top">{student.name}</div>;
             }
         });
         columns.push({

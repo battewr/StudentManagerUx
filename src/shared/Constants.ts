@@ -1,4 +1,4 @@
 
 export class Constants {
-    public static BackendUri: string = "http://localhost:8194/";
+    public static BackendUri: string = "https://localhost:8194/";
 };

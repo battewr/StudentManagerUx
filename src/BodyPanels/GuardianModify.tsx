@@ -43,7 +43,7 @@ export class GuardianModify extends React.Component<GuardianModifyProperites, Gu
                     onChange={this.onGuardianNameInputChanged.bind(this)} />
             </div>
             <EmailInput onEmailChanged={this.onGuardianEmailInputChanged} email={this.state.guardianToEdit.email} />
-            <button type="button" onClick={this.onSubmitNewGuardian.bind(this)} className="btn btn-secondary margin-top">Save</button>
+            <button type="button" onClick={this.onSubmitNewGuardian.bind(this)} className="btn btn-secondary cx-margin-top">Save</button>
             <div>{this.state.putResponse}</div>
         </div>;
     }

@@ -15,7 +15,7 @@ import { IGuardian } from "./shared/IGuardian";
 import { GuardianRegister } from "./BodyPanels/GuardianRegister";
 
 import "../styles/Body.less";
-import "../styles/Shared.less";
+import "../styles/MainShared.less";
 import { GuardianModify } from "./BodyPanels/GuardianModify";
 
 export interface BodyProperties {
