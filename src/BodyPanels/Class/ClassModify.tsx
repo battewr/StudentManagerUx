@@ -1,7 +1,7 @@
 import * as React from "React";
-import { IClass } from "../shared/IClass";
-import { GradeSelector } from "../shared/GradeSelector";
-import { Constants } from "../shared/Constants";
+import { IClass } from "../../shared/IClass";
+import { GradeSelector } from "../../shared/GradeSelector";
+import { Constants } from "../../shared/Constants";
 
 export interface ClassModifyProperites {
     classToEdit: IClass;

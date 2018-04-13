@@ -1,10 +1,29 @@
+/**
+ * Block imports...
+ * ! { Object} from "file"
+ */
 import * as React from "React";
-import { Constants } from "../shared/Constants";
-import { IStudent } from "../shared/IStudent";
-import { IRawStudent } from "../shared/RawRestInterfaces";
-import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/MainShared.less";
+
+/**
+ * Shared
+ */
+import { Constants } from "../../shared/Constants";
+import { IStudent } from "../../shared/IStudent";
+import { IRawStudent } from "../../shared/RawRestInterfaces";
+import { List, ListColumnDefinition } from "../../shared/Components/List";
+import { PageAlertEntry } from "../../shared/Interfaces";
+
+/**
+ * Specific... body panel stuff??
+ */
+
+
+/**
+ * less imports..
+ */
+import "../../../styles/Student.less";
+import "../../../styles/MainShared.less";
 
 class StudentListContainer extends List<IStudent> { }
 
@@ -16,6 +35,7 @@ export interface StudentListState {
     isLoading: boolean;
     error: string;
     studentList: IStudent[];
+    pageAlerts: PageAlertEntry[];
 }
 
 /**
@@ -32,7 +52,8 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         this.state = {
             isLoading: true,
             error: null,
-            studentList: null
+            studentList: null,
+            pageAlerts: [],
         };
     }
 
@@ -67,7 +88,35 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         return <div className="student-list-container">
             <h2>Student List</h2>
             {this.renderStudentList()}
+            {this.renderPageAlerts()}
         </div>;
+    }
+
+    private renderPageAlerts(): JSX.Element[] {
+        const alertList: JSX.Element[] = [];
+        this.state.pageAlerts.forEach((alert: PageAlertEntry, index) => {
+            const alertClass = `alert ${alert.pageAlertType}`;
+
+            const newAlert = <div className={alertClass} role="alert">
+                {alert.pageAlert}
+                <button type="button" onClick={() => {
+                    this.removeAlert(index);
+                }} className="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>;
+
+            alertList.push(newAlert);
+        });
+        return alertList;
+    }
+
+    private removeAlert(index: number) {
+        this.setState((prevState: StudentListState) => {
+            const pageAlerts = Object.assign([], prevState.pageAlerts);
+            pageAlerts.splice(index, 1);
+            return { pageAlerts };
+        });
     }
 
     private renderStudentList(): JSX.Element {
@@ -87,7 +136,14 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         columns.push({
             titleDisplayValue: "Id",
             renderer: (student: IStudent): JSX.Element => {
-                return <div className="cx-padding-top">{student.id}</div>;
+                return <div className="cx-padding-top">
+                    <span onClick={() => {
+                        this.onCopyToClipboardClicked(student);
+                    }}>
+                        <img className="student-id-clipboard-copy-img" src="./img/copy.svg" />
+                    </span>
+                    {student.id}
+                </div>;
             }
         });
         columns.push({
@@ -141,5 +197,44 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             name: rawStudent._name,
             grade: rawStudent._grade
         };
+    }
+
+    private onCopyToClipboardClicked(student: IStudent) {
+        const result = this.copyStudentIdToClipboard(student.id);
+        if (result) {
+            this.setState((prevState: StudentListState) => {
+                const pageAlerts = Object.assign([], prevState.pageAlerts);
+                pageAlerts.push({ pageAlert: "Copied to Clipboard Successfully!", pageAlertType: "alert-success" });
+                return { pageAlerts };
+            });
+        } else {
+            this.setState((prevState: StudentListState) => {
+                const pageAlerts = Object.assign([], prevState.pageAlerts);
+                pageAlerts.push({ pageAlert: "Copy to Clipboard Failed!", pageAlertType: "alert-danger" });
+                return { pageAlerts };
+            });
+        }
+    }
+
+    /**
+     * Take an input string and place it into the copy buffer... support matrix
+     * says we should work IE9+ and most other browsers...
+     * @param inputText a string value we want to copy to the clipboard
+     */
+    private copyStudentIdToClipboard(inputText: string): boolean {
+        try {
+            const copyBufferTempDomentry = document.createElement("textarea");
+            copyBufferTempDomentry.value = inputText;
+            document.body.appendChild(copyBufferTempDomentry);
+
+            copyBufferTempDomentry.select();
+            /* Copy the text inside the text field */
+            document.execCommand("Copy");
+            document.body.removeChild(copyBufferTempDomentry);
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+        return true;
     }
 };
