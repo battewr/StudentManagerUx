@@ -1,8 +1,8 @@
 import * as React from "React";
-import { IGuardian } from "../shared/IGuardian";
-import { GradeSelector } from "../shared/GradeSelector";
-import { Constants } from "../shared/Constants";
-import { EmailInput } from "../shared/Components/EmailInput";
+import { IGuardian } from "../../shared/IGuardian";
+import { GradeSelector } from "../../shared/GradeSelector";
+import { Constants } from "../../shared/Constants";
+import { EmailInput } from "../../shared/Components/EmailInput";
 
 export interface GuardianModifyProperites {
     guardianToEdit: IGuardian;

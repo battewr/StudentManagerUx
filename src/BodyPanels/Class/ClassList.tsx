@@ -1,13 +1,13 @@
 import * as React from "React";
-import { Constants } from "../shared/Constants";
-import { IClass } from "../shared/IClass";
-import { IRawClass, IRawStudent } from "../shared/RawRestInterfaces";
-import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
-import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/MainShared.less";
+import { Constants } from "../../shared/Constants";
+import { IClass } from "../../shared/IClass";
+import { IRawClass, IRawStudent } from "../../shared/RawRestInterfaces";
+import { IStudent } from "../../shared/IStudent";
+import { List, ListColumnDefinition } from "../../shared/Components/List";
 
+import "../../../styles/MainShared.less";
 class ClassListContainer extends List<IClass> { }
 
 export interface ClassListProperties {

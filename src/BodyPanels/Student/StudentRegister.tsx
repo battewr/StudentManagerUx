@@ -1,9 +1,10 @@
 import * as React from "React";
 import * as uuid from "uuid";
-import { Constants } from "../shared/Constants";
-import { GradeSelector } from "../shared/GradeSelector";
 
-import "../../styles/MainShared.less";
+import { Constants } from "../../shared/Constants";
+import { GradeSelector } from "../../shared/GradeSelector";
+
+import "../../../styles/MainShared.less";
 
 
 export interface StudentRegisterProperties {

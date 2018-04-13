@@ -1,14 +1,15 @@
 import * as React from "React";
-import { Constants } from "../shared/Constants";
-import { IGuardian } from "../shared/IGuardian";
-import { IRawGuardian, IRawStudent } from "../shared/RawRestInterfaces";
-import { IStudent } from "../shared/IStudent";
 import { randomBytes } from "crypto";
-import { List, ListColumnDefinition } from "../shared/Components/List";
 
-import "../../styles/MainShared.less";
+import { Constants } from "../../shared/Constants";
+import { IGuardian } from "../../shared/IGuardian";
+import { IRawGuardian, IRawStudent } from "../../shared/RawRestInterfaces";
+import { IStudent } from "../../shared/IStudent";
+import { List, ListColumnDefinition } from "../../shared/Components/List";
 
-class ClassListContainer extends List<IGuardian> { }
+import "../../../styles/MainShared.less";
+
+class GuardianListContainer extends List<IGuardian> { }
 
 export interface GuardianListProperties {
     onEditGuardian(guardianToEdit: IGuardian): void;
@@ -75,7 +76,7 @@ export class GuardianList extends React.Component<GuardianListProperties, Guardi
     }
 
     private renderClassList(): JSX.Element {
-        return <ClassListContainer
+        return <GuardianListContainer
             columns={this.makeColumns()}
             data={this.state.guardianList} />;
     }

@@ -1,10 +1,11 @@
 import * as React from "React";
 import * as uuid from "uuid";
-import { Constants } from "../shared/Constants";
 
-import "../../styles/MainShared.less";
-import { GradeSelector } from "../shared/GradeSelector";
-import { EmailInput } from "../shared/Components/EmailInput";
+import { Constants } from "../../shared/Constants";
+import { GradeSelector } from "../../shared/GradeSelector";
+import { EmailInput } from "../../shared/Components/EmailInput";
+
+import "../../../styles/MainShared.less";
 
 export interface GuardianRegisterProperties {}
 

@@ -1,12 +1,12 @@
 import * as React from "React";
-import { IClass } from "../shared/IClass";
-import { Constants } from "../shared/Constants";
-import { IRawStudent, IEligibilityContract } from "../shared/RawRestInterfaces";
-import { IStudent } from "../shared/IStudent";
-import { List, ListColumnDefinition } from "../shared/Components/List";
+import { IClass } from "../../../shared/IClass";
+import { Constants } from "../../../shared/Constants";
+import { IRawStudent, IEligibilityContract } from "../../../shared/RawRestInterfaces";
+import { IStudent } from "../../../shared/IStudent";
+import { List, ListColumnDefinition } from "../../../shared/Components/List";
 
-import "../../styles/MainShared.less";
-import "../../styles/AvailableStudentForRegistration.less";
+import "../../../../styles/MainShared.less";
+import "../../../../styles/AvailableStudentForRegistration.less";
 
 class RegisterStudentListContainer extends List<IStudent> { }
 

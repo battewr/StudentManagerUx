@@ -1,9 +1,10 @@
 import * as React from "React";
-import { IStudent } from "../shared/IStudent";
-import { GradeSelector } from "../shared/GradeSelector";
-import { Constants } from "../shared/Constants";
 
-import "../../styles/StudentModify.less";
+import { IStudent } from "../../shared/IStudent";
+import { GradeSelector } from "../../shared/GradeSelector";
+import { Constants } from "../../shared/Constants";
+
+import "../../../styles/StudentModify.less";
 
 export interface StudentModifyProperites {
     studentToEdit: IStudent;
