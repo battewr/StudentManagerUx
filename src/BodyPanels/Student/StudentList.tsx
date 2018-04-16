@@ -29,6 +29,7 @@ class StudentListContainer extends List<IStudent> { }
 
 export interface StudentListProperties {
     onEditStudent(studentId: IStudent): void;
+    authorizationToken: string;
 }
 
 export interface StudentListState {
@@ -61,7 +62,8 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
         // trigger the rest request...
         fetch(Constants.BackendUri + "students", {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "GET",
         }).then((response) => {
@@ -170,7 +172,8 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
     private deleteStudent(student: IStudent) {
         fetch(Constants.BackendUri + `student?Id=${student.id}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "DELETE",
         }).then((response) => {

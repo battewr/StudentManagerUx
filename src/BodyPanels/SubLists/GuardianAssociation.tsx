@@ -15,6 +15,7 @@ class GuardianChildListContainer extends List<IStudent> { }
 
 export interface GuardianAssociationProperties {
     guardianToEdit: IGuardian;
+    authorizationToken: string;
     onEditTargetChanged(alteredGuardian: IGuardian): void;
 }
 
@@ -37,7 +38,8 @@ export class GuardianAssociation extends React.Component<GuardianAssociationProp
         // trigger the rest request...
         fetch(Constants.BackendUri + "students", {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "GET",
         }).then((response) => {
@@ -91,6 +93,7 @@ export class GuardianAssociation extends React.Component<GuardianAssociationProp
     private renderAvailableStudentsInterface(): JSX.Element {
         return <AssociateChild
             studentList={this.state.childList}
+            authorizationToken={this.props.authorizationToken}
             guardianSelected={this.props.guardianToEdit}
             onEditTargetChanged={this.props.onEditTargetChanged} />;
     }
@@ -183,7 +186,8 @@ export class GuardianAssociation extends React.Component<GuardianAssociationProp
     private disassociateChildFromGuardian(classId: string, student: IStudent) {
         fetch(Constants.BackendUri + `assign?Id=${classId}&StudentId=${student.id}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "DELETE",
         }).then((response) => {

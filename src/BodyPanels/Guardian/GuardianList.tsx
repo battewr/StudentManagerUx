@@ -12,6 +12,7 @@ import "../../../styles/MainShared.less";
 class GuardianListContainer extends List<IGuardian> { }
 
 export interface GuardianListProperties {
+    authorizationToken: string;
     onEditGuardian(guardianToEdit: IGuardian): void;
     onEditAssociatedChildren(guardianToEdit: IGuardian): void;
 }
@@ -46,7 +47,8 @@ export class GuardianList extends React.Component<GuardianListProperties, Guardi
         // trigger the rest request...
         fetch(Constants.BackendUri + "guardian", {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "GET",
         }).then((response) => {

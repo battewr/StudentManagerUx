@@ -8,6 +8,7 @@ import "../../../styles/StudentModify.less";
 
 export interface StudentModifyProperites {
     studentToEdit: IStudent;
+    authorizationToken: string;
 }
 
 export interface StudentModifyState {
@@ -67,7 +68,8 @@ export class StudentModify extends React.Component<StudentModifyProperites, Stud
             fetch(Constants.BackendUri + "student?Id=" + studentId, {
                 body: JSON.stringify(networkStudentObject),
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    "sm-authorization-header": this.props.authorizationToken || ""
                 },
                 method: "PUT",
             }).then((response) => {

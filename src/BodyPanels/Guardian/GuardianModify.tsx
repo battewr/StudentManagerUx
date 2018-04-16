@@ -6,6 +6,7 @@ import { EmailInput } from "../../shared/Components/EmailInput";
 
 export interface GuardianModifyProperites {
     guardianToEdit: IGuardian;
+    authorizationToken: string;
 }
 
 export interface GuardianModifyState {
@@ -68,7 +69,8 @@ export class GuardianModify extends React.Component<GuardianModifyProperites, Gu
             fetch(Constants.BackendUri + "guardian?Id=" + guardianId, {
                 body: JSON.stringify(networkGuardianObject),
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    "sm-authorization-header": this.props.authorizationToken || ""
                 },
                 method: "PUT",
             }).then((response) => {

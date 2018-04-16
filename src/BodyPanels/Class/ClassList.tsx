@@ -13,6 +13,7 @@ class ClassListContainer extends List<IClass> { }
 export interface ClassListProperties {
     onEditClass(classToEdit: IClass): void;
     onEditClassList(classToEdit: IClass): void;
+    authorizationToken: string;
 }
 
 export interface ClassListState {
@@ -45,7 +46,8 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
         // trigger the rest request...
         fetch(Constants.BackendUri + "class", {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "GET",
         }).then((response) => {

@@ -6,6 +6,7 @@ import "../styles/Title.less";
 
 export interface TitleProperties {
   onToggleMenu(): void;
+  onLoginSuccessful(token: string, expiresAt: string): void;
 }
 
 export class Title extends React.Component<TitleProperties> {
@@ -32,7 +33,7 @@ export class Title extends React.Component<TitleProperties> {
           <img className="title-section-menu-icon-img" src="./img/login.svg" />
         </span>
 
-        <LoginModal />
+        <LoginModal onLoginSuccessful={this.props.onLoginSuccessful} />
       </div>
     );
   }
