@@ -14,6 +14,7 @@ class AttendeeModifyListContainer extends List<IStudent> { }
 
 export interface AttendeeModifyProperties {
     classToEdit: IClass;
+    authorizationToken: string;
     onEditTargetChanged(alteredClass: IClass): void;
 }
 
@@ -65,7 +66,8 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
     private renderAvailableStudentsInterface(): JSX.Element {
         return <RegisterStudent
             classSelected={this.props.classToEdit}
-            onEditTargetChanged={this.props.onEditTargetChanged} />;
+            onEditTargetChanged={this.props.onEditTargetChanged}
+            authorizationToken={this.props.authorizationToken} />;
     }
 
     private renderClassList(): JSX.Element {
@@ -161,7 +163,8 @@ export class AttendeeModify extends React.Component<AttendeeModifyProperties, At
     private removeStudentFromClass(classId: string, student: IStudent) {
         fetch(Constants.BackendUri + `attendence?Id=${classId}&StudentId=${student.id}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "DELETE",
         }).then((response) => {

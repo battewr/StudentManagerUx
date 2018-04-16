@@ -7,7 +7,7 @@ import "../../../styles/MainShared.less";
 
 
 export interface ClassRegisterProperties {
-
+    authorizationToken: string;
 }
 
 export interface ClassRegisterState {
@@ -110,7 +110,8 @@ export class ClassRegister extends React.Component<ClassRegisterProperties, Clas
             fetch(Constants.BackendUri + "class", {
                 body: JSON.stringify(networkClassObject),
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    "sm-authorization-header": this.props.authorizationToken || ""
                 },
                 method: "POST",
             }).then((response) => {

@@ -12,6 +12,7 @@ class RegisterStudentListContainer extends List<IStudent> { }
 
 export interface RegisterStudentProperties {
     classSelected: IClass;
+    authorizationToken: string;
     onEditTargetChanged(newClass: IClass): void;
 }
 
@@ -53,7 +54,8 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         // TODO rest request... to retreive the students who aren"t in this class
         fetch(Constants.BackendUri + `eligibility?Id=${this.props.classSelected.id}&take=${take}&skip=${skip}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "GET",
         }).then((response) => {
@@ -149,7 +151,8 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
     private addStudentToClass(newStudent: IStudent) {
         fetch(Constants.BackendUri + `attendence?Id=${this.props.classSelected.id}&StudentId=${newStudent.id}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "PUT",
         }).then((response) => {

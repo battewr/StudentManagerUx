@@ -5,6 +5,7 @@ import { Constants } from "../../shared/Constants";
 
 export interface ClassModifyProperites {
     classToEdit: IClass;
+    authorizationToken: string;
 }
 
 export interface ClassModifyState {
@@ -90,7 +91,8 @@ export class ClassModify extends React.Component<ClassModifyProperites, ClassMod
             fetch(Constants.BackendUri + "class?Id=" + classId, {
                 body: JSON.stringify(networkClassObject),
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    "sm-authorization-header": this.props.authorizationToken || ""
                 },
                 method: "PUT",
             }).then((response) => {

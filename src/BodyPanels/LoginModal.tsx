@@ -7,7 +7,11 @@ export interface LoginModalState {
     restResponse: string;
 }
 
-export class LoginModal extends React.Component<any, LoginModalState> {
+export interface LoginModelProperties {
+    onLoginSuccessful(token: string, expiresAt: string): void;
+}
+
+export class LoginModal extends React.Component<LoginModelProperties, LoginModalState> {
 
     constructor(props: any) {
         super(props);
@@ -62,13 +66,23 @@ export class LoginModal extends React.Component<any, LoginModalState> {
 
     private onAttemptLogin() {
         fetch(Constants.BackendUri + "login", {
-            body: JSON.stringify({userName: this.state.userName, password: this.state.password}),
+            body: JSON.stringify({ userName: this.state.userName, password: this.state.password }),
             headers: {
                 "content-type": "application/json"
             },
             method: "POST",
         }).then((response) => {
-            this.setState({ restResponse: `Finished: ${response.status.toString()} : ${response.statusText}` });
+            response.json().then((body) => {
+                if (!body || !body.token || !body.expires) {
+                    this.setState({ restResponse: `Post Error Bad Response Invalid` });
+                    return;
+                } else {
+                    this.props.onLoginSuccessful(body.token, body.expires);
+                    this.setState({ restResponse: `Finished: ${response.status.toString()} : ${response.statusText}` });
+                }
+            }).catch((err) => {
+                this.setState({ restResponse: `Post Error: ${err}` });
+            });
         }).catch((err) => {
             this.setState({ restResponse: `Post Error: ${err}` });
         });

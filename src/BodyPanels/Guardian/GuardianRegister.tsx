@@ -7,7 +7,9 @@ import { EmailInput } from "../../shared/Components/EmailInput";
 
 import "../../../styles/MainShared.less";
 
-export interface GuardianRegisterProperties {}
+export interface GuardianRegisterProperties {
+  authorizationToken: string;
+}
 
 export interface GuardianRegisterState {
   name: string;
@@ -98,7 +100,8 @@ export class GuardianRegister extends React.Component<
       fetch(Constants.BackendUri + "guardian", {
         body: JSON.stringify(networkGuardianObject),
         headers: {
-          "content-type": "application/json"
+          "content-type": "application/json",
+          "sm-authorization-header": this.props.authorizationToken || ""
         },
         method: "POST"
       })

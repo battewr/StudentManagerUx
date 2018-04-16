@@ -23,6 +23,7 @@ import "../styles/MainShared.less";
 
 export interface BodyProperties {
   selectedPanel: SelectedPanel;
+  authorizationToken: string;
   onPanelChange(selectedPanel: SelectedPanel): void;
 }
 
@@ -75,27 +76,29 @@ export class Body extends React.Component<BodyProperties, BodyState> {
   private renderSelectedMenuOption(): JSX.Element {
     switch (this.props.selectedPanel) {
       case SelectedPanel.StudentRegistration:
-        return <StudentRegister />;
+        return <StudentRegister authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.StudentList:
-        return <StudentList onEditStudent={this.onEditStudent} />;
+        return <StudentList onEditStudent={this.onEditStudent} authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.StudentModification:
-        return <StudentModify studentToEdit={this.state.studentToEdit} />;
+        return <StudentModify studentToEdit={this.state.studentToEdit} authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.ClassRegistration:
-        return <ClassRegister />;
+        return <ClassRegister authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.ClassList:
         return (
           <ClassList
             onEditClass={this.onEditClass}
             onEditClassList={this.onEditClassList}
+            authorizationToken={this.props.authorizationToken}
           />
         );
       case SelectedPanel.ClassModification:
-        return <ClassModify classToEdit={this.state.classToEdit} />;
+        return <ClassModify classToEdit={this.state.classToEdit} authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.AttendenceModification:
         return (
           <AttendeeModify
             classToEdit={this.state.classToEdit}
             onEditTargetChanged={this.onEditTargetChanged}
+            authorizationToken={this.props.authorizationToken}
           />
         );
       case SelectedPanel.GuardianList:
@@ -103,16 +106,18 @@ export class Body extends React.Component<BodyProperties, BodyState> {
           <GuardianList
             onEditGuardian={this.onEditGuardian}
             onEditAssociatedChildren={this.onEditAssociatedChildren}
+            authorizationToken={this.props.authorizationToken}
           />
         );
       case SelectedPanel.GuardianRegistration:
-        return <GuardianRegister />;
+        return <GuardianRegister authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.GuardianModification:
-        return <GuardianModify guardianToEdit={this.state.guardianToEdit} />;
+        return <GuardianModify guardianToEdit={this.state.guardianToEdit} authorizationToken={this.props.authorizationToken} />;
       case SelectedPanel.GuardianAssociation:
         return <GuardianAssociation
           guardianToEdit={this.state.guardianToEdit}
-          onEditTargetChanged={this.onGuardianitTargetChanged} />;
+          onEditTargetChanged={this.onGuardianitTargetChanged}
+          authorizationToken={this.props.authorizationToken} />;
       default:
         throw "Unsupported Menu Option!!";
     }

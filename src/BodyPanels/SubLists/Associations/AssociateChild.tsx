@@ -13,6 +13,7 @@ class AssociateChildListContainer extends List<IStudent> { }
 export interface AssociateChildProperties {
     studentList: IStudent[];
     guardianSelected: IGuardian;
+    authorizationToken: string;
     onEditTargetChanged(newGuardian: IGuardian): void;
 }
 
@@ -121,7 +122,8 @@ export class AssociateChild extends React.Component<AssociateChildProperties,
     private associateChildToGuardian(newStudent: IStudent) {
         fetch(Constants.BackendUri + `assign?Id=${this.props.guardianSelected.id}&StudentId=${newStudent.id}`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "sm-authorization-header": this.props.authorizationToken || ""
             },
             method: "PUT",
         }).then((response) => {

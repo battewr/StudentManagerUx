@@ -8,7 +8,7 @@ import "../../../styles/MainShared.less";
 
 
 export interface StudentRegisterProperties {
-
+    authorizationToken: string;
 }
 
 export interface StudentRegisterState {
@@ -91,7 +91,8 @@ export class StudentRegister extends React.Component<StudentRegisterProperties, 
             fetch(Constants.BackendUri + "student", {
                 body: JSON.stringify(networkStudentObject),
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    "sm-authorization-header": this.props.authorizationToken || ""
                 },
                 method: "POST",
             }).then((response) => {
