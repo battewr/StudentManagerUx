@@ -1,19 +1,17 @@
 import * as React from "react";
 import { Constants } from "../shared/Constants";
-import { LocalStorageWrapper } from "../shared/LocalStorageWrapper";
 
-export interface LoginModalState {
+export interface RegisterAccountModalState {
     userName: string;
     password: string;
     restResponse: string;
 }
 
-export interface LoginModelProperties {
-    onRegisterRequested(): void;
-    onLoginSuccessful(token: string, expiresAt: string): void;
+export interface RegisterAccountModalProperties {
+    onRegisteredSuccessfully(): void;
 }
 
-export class LoginModal extends React.Component<LoginModelProperties, LoginModalState> {
+export class RegisterAccountModal extends React.Component<RegisterAccountModalProperties, RegisterAccountModalState> {
 
     constructor(props: any) {
         super(props);
@@ -26,24 +24,24 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
     }
 
     public render() {
-        return <div className="modal fade" id="login-modal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        return <div className="modal fade" id="register-modal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Login</h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Register New User</h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div className="modal-body">
-                        {this.renderLoginBody()}
+                        {this.renderRegistrationBody()}
                     </div>
                 </div>
             </div>
         </div>;
     }
 
-    private renderLoginBody(): JSX.Element {
+    private renderRegistrationBody(): JSX.Element {
         return <div>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
@@ -61,32 +59,24 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
                     aria-describedby="inputGroup-sizing-default" value={this.state.password}
                     onChange={this.onPasswordChanged.bind(this)} />
             </div>
-            <button type="button" onClick={this.onAttemptLogin.bind(this)} className="btn btn-secondary cx-margin-top">Login</button>
-            <button type="button" onClick={this.props.onRegisterRequested} className="btn btn-secondary cx-margin-top">Register</button>
+            <button type="button" onClick={this.onAttemptRegister.bind(this)} className="btn btn-secondary cx-margin-top">Register</button>
             <div>{this.state.restResponse}</div>
         </div>;
     }
 
-    private onAttemptLogin() {
-        fetch(Constants.BackendUri + "login", {
+    private onAttemptRegister() {
+        fetch(Constants.BackendUri + "registerGuardian", {
             body: JSON.stringify({ userName: this.state.userName, password: this.state.password }),
             headers: {
                 "content-type": "application/json"
             },
             method: "POST",
         }).then((response) => {
-            response.json().then((body) => {
-                if (!body || !body.token || !body.expires) {
-                    this.setState({ restResponse: `Post Error Bad Response Invalid` });
-                    return;
-                } else {
-                    this.props.onLoginSuccessful(body.token, body.expires);
-                    LocalStorageWrapper.get().setItem(Constants.AuthorizationTokenKey, body.token);
-                    this.setState({ restResponse: `Finished: ${response.status.toString()} : ${response.statusText}` });
-                }
-            }).catch((err) => {
-                this.setState({ restResponse: `Post Error: ${err}` });
-            });
+            this.setState({ restResponse: `http status ${response.status}` });
+
+            if (response.status === 200) {
+                this.props.onRegisteredSuccessfully();
+            }
         }).catch((err) => {
             this.setState({ restResponse: `Post Error: ${err}` });
         });

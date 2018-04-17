@@ -3,7 +3,10 @@ import * as React from "React";
 import { Title } from "./Title";
 import { Body } from "./Body";
 import { RightMenuPanel } from "./RightMenuPanel";
+
+import { Constants } from "./shared/Constants";
 import { SelectedPanel } from "./shared/Enums";
+import { LocalStorageWrapper } from "./shared/LocalStorageWrapper";
 
 import "../styles/Layout.less";
 
@@ -15,6 +18,7 @@ export interface LayoutState {
     mainMenuVisible: boolean;
     selectedPanel: SelectedPanel;
     authorizationToken: string;
+    shouldRenderLogin: boolean;
 };
 
 export class Layout extends React.Component<LayoutProperties, LayoutState> {
@@ -28,12 +32,15 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
         this.state = {
             mainMenuVisible: true,
             selectedPanel: SelectedPanel.StudentList,
-            authorizationToken: null,
+            authorizationToken: LocalStorageWrapper.get().getItem(Constants.AuthorizationTokenKey),
+            shouldRenderLogin: false,
         };
 
         this.onToggleMainMenu = this.onToggleMainMenu.bind(this);
         this.onPanelChanged = this.onPanelChanged.bind(this);
         this.onLoginSuccessful = this.onLoginSuccessful.bind(this);
+        this.onSecurityContextRequired = this.onSecurityContextRequired.bind(this);
+        this.onLogout = this.onLogout.bind(this);
     }
 
     /**
@@ -43,7 +50,11 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
     public render(): JSX.Element {
         return <div className="main-app-root">
             <div className="title-section">
-                <Title onToggleMenu={this.onToggleMainMenu} onLoginSuccessful={this.onLoginSuccessful} />
+                <Title onToggleMenu={this.onToggleMainMenu}
+                    showLogin={this.state.shouldRenderLogin}
+                    onLoginSuccessful={this.onLoginSuccessful}
+                    onLogout={this.onLogout}
+                    authorizationToken={this.state.authorizationToken} />
             </div>
             <div className="main-body-section">
                 <RightMenuPanel
@@ -54,6 +65,7 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
                 <Body
                     selectedPanel={this.state.selectedPanel}
                     onPanelChange={this.onPanelChanged}
+                    onSecurityContextRequired={this.onSecurityContextRequired}
                     authorizationToken={this.state.authorizationToken} />
             </div>
             <div className="footer-section">
@@ -63,8 +75,18 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
         </div>;
     }
 
+    private onSecurityContextRequired(): void {
+        this.setState({ shouldRenderLogin: true });
+    }
+
     private onLoginSuccessful(token: string, expiresAt: string): void {
+        console.log("setting authorization token");
         this.setState({ authorizationToken: token });
+    }
+
+    private onLogout(): void {
+        LocalStorageWrapper.get().removeItem(Constants.AuthorizationTokenKey);
+        this.setState({ authorizationToken: null });
     }
 
     private onPanelChanged(selectedPanel: SelectedPanel): void {
