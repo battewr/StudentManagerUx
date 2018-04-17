@@ -3,10 +3,16 @@ import { LoginModal } from "./BodyPanels/LoginModal";
 
 import "../styles/MainShared.less";
 import "../styles/Title.less";
+import { RegisterAccountModal } from "./BodyPanels/RegisterAccountModal";
+import { ENGINE_METHOD_DH } from "constants";
 
 export interface TitleProperties {
+  showLogin: boolean;
+  authorizationToken: string;
+
   onToggleMenu(): void;
   onLoginSuccessful(token: string, expiresAt: string): void;
+  onLogout(): void;
 }
 
 export class Title extends React.Component<TitleProperties> {
@@ -14,6 +20,15 @@ export class Title extends React.Component<TitleProperties> {
     super(props);
 
     this.tryLogin = this.tryLogin.bind(this);
+    this.onLoginSuccessful = this.onLoginSuccessful.bind(this);
+    this.onRegisterRequested = this.onRegisterRequested.bind(this);
+    this.onRegistered = this.onRegistered.bind(this);
+  }
+
+  public componentWillReceiveProps(props: TitleProperties) {
+    if (props.showLogin) {
+      this.tryLogin();
+    }
   }
 
   /**
@@ -33,13 +48,45 @@ export class Title extends React.Component<TitleProperties> {
           <img className="title-section-menu-icon-img" src="./img/login.svg" />
         </span>
 
-        <LoginModal onLoginSuccessful={this.props.onLoginSuccessful} />
+        <RegisterAccountModal onRegisteredSuccessfully={this.onRegistered} />
+        <LoginModal onLoginSuccessful={this.onLoginSuccessful} onRegisterRequested={this.onRegisterRequested} />
+
       </div>
     );
   }
 
+  private onRegistered(): void {
+    this.setVisibleRegister("hide");
+    this.setVisibleLogin("show");
+  }
+
+  private onRegisterRequested(): void {
+    this.setVisibleLogin("hide");
+    this.setVisibleRegister("show");
+  }
+
+  private onLoginSuccessful(token: string, expiresAt: string) {
+    this.setVisibleLogin("hide");
+
+    console.log("Login successful, closing modal");
+    this.props.onLoginSuccessful(token, expiresAt);
+  }
+
   private tryLogin() {
+    if (this.props.authorizationToken && this.props.authorizationToken.length > 0) {
+      this.props.onLogout();
+      return;
+    }
+    this.setVisibleLogin("show");
+  }
+
+  private setVisibleLogin(visible: string) {
     const component: any = $("#login-modal");
-    component.modal("show");
+    component.modal(visible);
+  }
+
+  private setVisibleRegister(visible: string) {
+    const component: any = $("#register-modal");
+    component.modal(visible);
   }
 }

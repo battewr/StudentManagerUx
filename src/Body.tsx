@@ -24,6 +24,8 @@ import "../styles/MainShared.less";
 export interface BodyProperties {
   selectedPanel: SelectedPanel;
   authorizationToken: string;
+
+  onSecurityContextRequired(): void;
   onPanelChange(selectedPanel: SelectedPanel): void;
 }
 
@@ -31,6 +33,7 @@ export interface BodyState {
   studentToEdit: IStudent;
   classToEdit: IClass;
   guardianToEdit: IGuardian;
+  loading: boolean;
 }
 
 /**
@@ -47,7 +50,8 @@ export class Body extends React.Component<BodyProperties, BodyState> {
     this.state = {
       studentToEdit: null,
       classToEdit: null,
-      guardianToEdit: null
+      guardianToEdit: null,
+      loading: true,
     };
 
     this.onEditStudent = this.onEditStudent.bind(this);
@@ -60,11 +64,35 @@ export class Body extends React.Component<BodyProperties, BodyState> {
     this.onGuardianitTargetChanged = this.onGuardianitTargetChanged.bind(this);
   }
 
+  public componentWillMount() {
+    fetch(Constants.BackendUri + "sc", {
+      headers: {
+        "content-type": "application/json",
+        "sm-authorization-header": this.props.authorizationToken || ""
+      },
+      method: "GET",
+    }).then((response) => {
+      if (response.status !== 200) {
+        this.props.onSecurityContextRequired();
+        this.setState({ loading: false });
+        return;
+      }
+
+      this.setState({ loading: false });
+    }).catch((err) => {
+      this.setState({ loading: false });
+      this.props.onSecurityContextRequired();
+    });
+  }
+
   /**
    *
    * @returns {JSX.Element}
    */
   public render(): JSX.Element {
+    if (!this.props.authorizationToken || this.props.authorizationToken.length < 1 || this.state.loading) {
+      return <div className="body-container">Loading</div>;
+    }
     return (
       <div className="body-container">{this.renderSelectedMenuOption()}</div>
     );
