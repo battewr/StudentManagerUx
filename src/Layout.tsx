@@ -81,12 +81,12 @@ export class Layout extends React.Component<LayoutProperties, LayoutState> {
 
     private onLoginSuccessful(token: string, expiresAt: string): void {
         console.log("setting authorization token");
-        this.setState({ authorizationToken: token });
+        this.setState({ authorizationToken: token, shouldRenderLogin: false });
     }
 
     private onLogout(): void {
         LocalStorageWrapper.get().removeItem(Constants.AuthorizationTokenKey);
-        this.setState({ authorizationToken: null });
+        this.setState({ authorizationToken: null, shouldRenderLogin: true });
     }
 
     private onPanelChanged(selectedPanel: SelectedPanel): void {

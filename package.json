@@ -4,8 +4,10 @@
   "description": "StudentManager Primary Website",
   "main": "webpack.config.js",
   "dependencies": {
+    "@types/chai": "^4.1.3",
     "@types/es6-shim": "^0.31.36",
     "@types/jquery": "^3.3.1",
+    "@types/mocha": "^5.2.0",
     "@types/react": "^16.1.0",
     "@types/react-dom": "^16.0.4",
     "@types/uuid": "^3.4.3",
@@ -14,11 +16,13 @@
     "babel-loader": "^7.1.4",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
     "css-loader": "^0.28.11",
     "es6-shim": "^0.35.3",
     "jquery": "^3.3.1",
     "less": "^3.0.1",
     "less-loader": "^4.1.0",
+    "mocha": "^5.1.1",
     "popper.js": "^1.14.3",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
@@ -26,6 +30,7 @@
     "style-loader": "^0.20.3",
     "ts-lint": "^4.5.1",
     "ts-loader": "^4.1.0",
+    "ts-node": "^6.0.0",
     "typescript": "^2.8.1",
     "uuid": "^3.2.1",
     "webpack": "^4.3.0",
@@ -38,7 +43,7 @@
     "webpack-cli": "^2.0.13"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts",
     "build": "build.cmd"
   },
   "repository": {

@@ -11,9 +11,19 @@ echo ts-lint completed successfully
 echo --
 
 echo ----------
+echo Running mocha task....
+echo ----------
+call node_modules/.bin/mocha -r ts-node/register tests/**/*.spec.ts
+if errorlevel 1 goto FAIL
+
+echo --
+echo mocha completed successfully
+echo --
+
+echo ----------
 echo Running webpack task....
 echo ----------
-call node_modules/.bin/webpack --progress --colors --display-error-details --display-reasons
+call node_modules/.bin/webpack --debug --progress --colors --display-error-details --display-reasons
 if errorlevel 1 goto FAIL
 set exit_level=0
 echo ----------
