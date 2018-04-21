@@ -4,7 +4,6 @@ import { LoginModal } from "./BodyPanels/LoginModal";
 import "../styles/MainShared.less";
 import "../styles/Title.less";
 import { RegisterAccountModal } from "./BodyPanels/RegisterAccountModal";
-import { ENGINE_METHOD_DH } from "constants";
 
 export interface TitleProperties {
   showLogin: boolean;

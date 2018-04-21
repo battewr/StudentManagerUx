@@ -1,4 +1,5 @@
 module.exports = {
+    mode: 'development',
     entry: "./src/index.tsx",
     output: {
         filename: "index.js",
@@ -6,13 +7,12 @@ module.exports = {
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    devtool: "inline-source-map",
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"]
     },
-
     module: {
         rules: [
             { test: /\.tsx?$/, loader: "ts-loader" },
@@ -28,7 +28,7 @@ module.exports = {
             },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+            // { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         ]
     },
 
