@@ -1,5 +1,4 @@
 import * as React from "React";
-import { randomBytes } from "crypto";
 
 import { Constants } from "../../shared/Constants";
 import { IGuardian } from "../../shared/IGuardian";
@@ -52,6 +51,9 @@ export class GuardianList extends React.Component<GuardianListProperties, Guardi
             },
             method: "GET",
         }).then((response) => {
+            if (response.status !== 200) {
+                return;
+            }
             response.json().then((rawClassList: IRawGuardian[]) => {
                 const guardianList: IGuardian[] = [];
                 rawClassList.forEach((rawGuardianItem) => {

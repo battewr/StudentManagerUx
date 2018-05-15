@@ -1,26 +1,18 @@
 import * as React from "react";
-import { Constants } from "../shared/Constants";
-
-export interface RegisterAccountModalState {
-    userName: string;
-    password: string;
-    restResponse: string;
-}
+import { Constants } from "./shared/Constants";
+import { Login } from "./Model/Login";
+import { observer } from "mobx-react";
 
 export interface RegisterAccountModalProperties {
+    loginModel: Login;
     onRegisteredSuccessfully(): void;
 }
 
-export class RegisterAccountModal extends React.Component<RegisterAccountModalProperties, RegisterAccountModalState> {
+@observer
+export class RegisterAccountModal extends React.Component<RegisterAccountModalProperties> {
 
     constructor(props: any) {
         super(props);
-
-        this.state = {
-            userName: "",
-            password: "",
-            restResponse: "",
-        };
     }
 
     public render() {
@@ -48,7 +40,7 @@ export class RegisterAccountModal extends React.Component<RegisterAccountModalPr
                     <span className="input-group-text" id="inputGroup-sizing-default">User Name</span>
                 </div>
                 <input type="text" className="form-control" aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default" value={this.state.userName}
+                    aria-describedby="inputGroup-sizing-default" value={this.props.loginModel.userName}
                     onChange={this.onUserNameInputChanged.bind(this)} />
             </div>
             <div className="input-group mb-3">
@@ -56,29 +48,29 @@ export class RegisterAccountModal extends React.Component<RegisterAccountModalPr
                     <span className="input-group-text" id="inputGroup-sizing-default">Password</span>
                 </div>
                 <input type="password" className="form-control" aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default" value={this.state.password}
+                    aria-describedby="inputGroup-sizing-default" value={this.props.loginModel.password}
                     onChange={this.onPasswordChanged.bind(this)} />
             </div>
             <button type="button" onClick={this.onAttemptRegister.bind(this)} className="btn btn-secondary cx-margin-top">Register</button>
-            <div>{this.state.restResponse}</div>
+            <div>{this.props.loginModel.restResponse}</div>
         </div>;
     }
 
     private onAttemptRegister() {
         fetch(Constants.BackendUri + "registerGuardian", {
-            body: JSON.stringify({ userName: this.state.userName, password: this.state.password }),
+            body: JSON.stringify({ userName: this.props.loginModel.userName, password: this.props.loginModel.password }),
             headers: {
                 "content-type": "application/json"
             },
             method: "POST",
         }).then((response) => {
-            this.setState({ restResponse: `http status ${response.status}` });
+            this.props.loginModel.restResponse = `Post Error: ${response.status}`;
 
             if (response.status === 200) {
                 this.props.onRegisteredSuccessfully();
             }
         }).catch((err) => {
-            this.setState({ restResponse: `Post Error: ${err}` });
+            this.props.loginModel.restResponse = `Post Error: ${err}`;
         });
     }
 
@@ -89,7 +81,7 @@ export class RegisterAccountModal extends React.Component<RegisterAccountModalPr
             userName = event.target.value;
         }
 
-        this.setState({ userName });
+        this.props.loginModel.userName = userName;
     }
 
     private onPasswordChanged(event: any) {
@@ -98,6 +90,7 @@ export class RegisterAccountModal extends React.Component<RegisterAccountModalPr
             typeof event.target.value === "string") {
             password = event.target.value;
         }
-        this.setState({ password });
+
+        this.props.loginModel.password = password;
     }
 }

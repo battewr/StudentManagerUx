@@ -1,5 +1,4 @@
 import * as React from "React";
-import { randomBytes } from "crypto";
 
 import { Constants } from "../../shared/Constants";
 import { IClass } from "../../shared/IClass";
@@ -51,6 +50,9 @@ export class ClassList extends React.Component<ClassListProperties, ClassListSta
             },
             method: "GET",
         }).then((response) => {
+            if (response.status !== 200) {
+                return;
+            }
             response.json().then((rawClassList: IRawClass[]) => {
                 const classList: IClass[] = [];
                 rawClassList.forEach((rawClassItem) => {

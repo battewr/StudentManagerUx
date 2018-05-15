@@ -1,28 +1,20 @@
 import * as React from "react";
-import { Constants } from "../shared/Constants";
-import { LocalStorageWrapper } from "../shared/LocalStorageWrapper";
-
-export interface LoginModalState {
-    userName: string;
-    password: string;
-    restResponse: string;
-}
+import { observer } from "mobx-react";
+import { LoginModalViewModel } from "./ViewModels/Modal/LoginModalViewModel";
 
 export interface LoginModelProperties {
+    context: LoginModalViewModel;
+
     onRegisterRequested(): void;
-    onLoginSuccessful(token: string, expiresAt: string): void;
+    onLoginSuccessful(): void;
+
 }
 
-export class LoginModal extends React.Component<LoginModelProperties, LoginModalState> {
+@observer
+export class LoginModal extends React.Component<LoginModelProperties> {
 
     constructor(props: any) {
         super(props);
-
-        this.state = {
-            userName: "",
-            password: "",
-            restResponse: "",
-        };
     }
 
     public render() {
@@ -44,13 +36,14 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
     }
 
     private renderLoginBody(): JSX.Element {
+        const loginModel = this.props.context._loginModel;
         return <div>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="inputGroup-sizing-default">User Name</span>
                 </div>
                 <input type="text" className="form-control" aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default" value={this.state.userName}
+                    aria-describedby="inputGroup-sizing-default" value={loginModel.userName}
                     onChange={this.onUserNameInputChanged.bind(this)} />
             </div>
             <div className="input-group mb-3">
@@ -58,37 +51,20 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
                     <span className="input-group-text" id="inputGroup-sizing-default">Password</span>
                 </div>
                 <input type="password" className="form-control" aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default" value={this.state.password}
+                    aria-describedby="inputGroup-sizing-default" value={loginModel.password}
                     onChange={this.onPasswordChanged.bind(this)} />
             </div>
             <button type="button" onClick={this.onAttemptLogin.bind(this)} className="btn btn-secondary cx-margin-top">Login</button>
             <button type="button" onClick={this.props.onRegisterRequested} className="btn btn-secondary cx-margin-top">Register</button>
-            <div>{this.state.restResponse}</div>
+            <div>{loginModel.restResponse}</div>
         </div>;
     }
 
     private onAttemptLogin() {
-        fetch(Constants.BackendUri + "login", {
-            body: JSON.stringify({ userName: this.state.userName, password: this.state.password }),
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "POST",
-        }).then((response) => {
-            response.json().then((body) => {
-                if (!body || !body.token || !body.expires) {
-                    this.setState({ restResponse: `Post Error Bad Response Invalid` });
-                    return;
-                } else {
-                    this.props.onLoginSuccessful(body.token, body.expires);
-                    LocalStorageWrapper.get().setItem(Constants.AuthorizationTokenKey, body.token);
-                    this.setState({ restResponse: `Finished: ${response.status.toString()} : ${response.statusText}` });
-                }
-            }).catch((err) => {
-                this.setState({ restResponse: `Post Error: ${err}` });
-            });
-        }).catch((err) => {
-            this.setState({ restResponse: `Post Error: ${err}` });
+        this.props.context.tryLogin().then((result) => {
+            if (!!result) {
+                this.props.onLoginSuccessful();
+            }
         });
     }
 
@@ -99,7 +75,8 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
             userName = event.target.value;
         }
 
-        this.setState({ userName });
+        const loginModel = this.props.context._loginModel;
+        loginModel.userName = userName;
     }
 
     private onPasswordChanged(event: any) {
@@ -108,6 +85,8 @@ export class LoginModal extends React.Component<LoginModelProperties, LoginModal
             typeof event.target.value === "string") {
             password = event.target.value;
         }
-        this.setState({ password });
+
+        const loginModel = this.props.context._loginModel;
+        loginModel.password = password;
     }
 }

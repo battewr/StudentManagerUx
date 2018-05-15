@@ -67,6 +67,9 @@ export class StudentList extends React.Component<StudentListProperties, StudentL
             },
             method: "GET",
         }).then((response) => {
+            if (response.status !== 200) {
+                return;
+            }
             response.json().then((rawStudentList: IRawStudent[]) => {
                 const studentList: IStudent[] = [];
                 rawStudentList.forEach((rawStudent) => {

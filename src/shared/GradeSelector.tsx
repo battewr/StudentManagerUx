@@ -49,14 +49,9 @@ export class GradeSelector extends React.Component<GradeSelectorProperties> {
         </div>;
     }
 
-    /**
-     *
-     * @param event
-     * @returns {void}
-     */
-    private onStudentGradeInputChanged(grade: string): void {
-        this.props.onStudentGradeChanged(grade);
-    }
+    // private onStudentGradeInputChanged(grade: string): void {
+    //     this.props.onStudentGradeChanged(grade);
+    // }
 
     /**
      *
