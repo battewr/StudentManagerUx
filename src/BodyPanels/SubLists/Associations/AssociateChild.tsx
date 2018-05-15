@@ -1,6 +1,5 @@
 import * as React from "React";
 import { Constants } from "../../../shared/Constants";
-import { IRawStudent, IEligibilityContract } from "../../../shared/RawRestInterfaces";
 import { IStudent } from "../../../shared/IStudent";
 import { List, ListColumnDefinition } from "../../../shared/Components/List";
 import { IGuardian } from "../../../shared/IGuardian";
@@ -78,21 +77,21 @@ export class AssociateChild extends React.Component<AssociateChildProperties,
         </div>;
     }
 
-    private convertToStudentList(rawStudentList: IRawStudent[]): IStudent[] {
-        const convertedStudentList: IStudent[] = [];
-        rawStudentList.forEach((rawStudent) => {
-            convertedStudentList.push(this.convertRawStudentToInternalStudent(rawStudent));
-        });
-        return convertedStudentList;
-    }
+    // private convertToStudentList(rawStudentList: IRawStudent[]): IStudent[] {
+    //     const convertedStudentList: IStudent[] = [];
+    //     rawStudentList.forEach((rawStudent) => {
+    //         convertedStudentList.push(this.convertRawStudentToInternalStudent(rawStudent));
+    //     });
+    //     return convertedStudentList;
+    // }
 
-    private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {
-        return {
-            id: rawStudent._id,
-            name: rawStudent._name,
-            grade: rawStudent._grade
-        };
-    }
+    // private convertRawStudentToInternalStudent(rawStudent: IRawStudent): IStudent {
+    //     return {
+    //         id: rawStudent._id,
+    //         name: rawStudent._name,
+    //         grade: rawStudent._grade
+    //     };
+    // }
 
     private renderEligibleStudentListTable(eligibleStudents: IStudent[]): JSX.Element {
         return <AssociateChildListContainer

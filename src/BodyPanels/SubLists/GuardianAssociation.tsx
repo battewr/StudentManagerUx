@@ -144,44 +144,44 @@ export class GuardianAssociation extends React.Component<GuardianAssociationProp
         return columns;
     }
 
-    private onCopyToClipboardClicked(student: IStudent) {
-        const result = this.copyStudentIdToClipboard(student.id);
-        if (result) {
-            this.setState((prevState: GuardianAssociationState) => {
-                const pageAlerts = Object.assign([], prevState.pageAlerts);
-                pageAlerts.push({ pageAlert: "Copied to Clipboard Successfully!", pageAlertType: "alert-success" });
-                return { pageAlerts };
-            });
-        } else {
-            this.setState((prevState: GuardianAssociationState) => {
-                const pageAlerts = Object.assign([], prevState.pageAlerts);
-                pageAlerts.push({ pageAlert: "Copy to Clipboard Failed!", pageAlertType: "alert-danger" });
-                return { pageAlerts };
-            });
-        }
-    }
+    // private onCopyToClipboardClicked(student: IStudent) {
+    //     const result = this.copyStudentIdToClipboard(student.id);
+    //     if (result) {
+    //         this.setState((prevState: GuardianAssociationState) => {
+    //             const pageAlerts = Object.assign([], prevState.pageAlerts);
+    //             pageAlerts.push({ pageAlert: "Copied to Clipboard Successfully!", pageAlertType: "alert-success" });
+    //             return { pageAlerts };
+    //         });
+    //     } else {
+    //         this.setState((prevState: GuardianAssociationState) => {
+    //             const pageAlerts = Object.assign([], prevState.pageAlerts);
+    //             pageAlerts.push({ pageAlert: "Copy to Clipboard Failed!", pageAlertType: "alert-danger" });
+    //             return { pageAlerts };
+    //         });
+    //     }
+    // }
 
     /**
      * Take an input string and place it into the copy buffer... support matrix
      * says we should work IE9+ and most other browsers...
      * @param inputText a string value we want to copy to the clipboard
      */
-    private copyStudentIdToClipboard(inputText: string): boolean {
-        try {
-            const copyBufferTempDomentry = document.createElement("textarea");
-            copyBufferTempDomentry.value = inputText;
-            document.body.appendChild(copyBufferTempDomentry);
+    // private copyStudentIdToClipboard(inputText: string): boolean {
+    //     try {
+    //         const copyBufferTempDomentry = document.createElement("textarea");
+    //         copyBufferTempDomentry.value = inputText;
+    //         document.body.appendChild(copyBufferTempDomentry);
 
-            copyBufferTempDomentry.select();
-            /* Copy the text inside the text field */
-            document.execCommand("Copy");
-            document.body.removeChild(copyBufferTempDomentry);
-        } catch (err) {
-            console.error(err);
-            return false;
-        }
-        return true;
-    }
+    //         copyBufferTempDomentry.select();
+    //         /* Copy the text inside the text field */
+    //         document.execCommand("Copy");
+    //         document.body.removeChild(copyBufferTempDomentry);
+    //     } catch (err) {
+    //         console.error(err);
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     private disassociateChildFromGuardian(classId: string, student: IStudent) {
         fetch(Constants.BackendUri + `assign?Id=${classId}&StudentId=${student.id}`, {

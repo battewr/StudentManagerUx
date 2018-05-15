@@ -110,9 +110,9 @@ export class RegisterStudent extends React.Component<RegisterStudentProperties,
         };
     }
 
-    private changePage() {
-        this.onModalLoad();
-    }
+    // private changePage() {
+    //     this.onModalLoad();
+    // }
 
     private renderEligibleStudentListTable(): JSX.Element {
         return <RegisterStudentListContainer
